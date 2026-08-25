@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Invoice Generator · v1.0.70</title>
-<!-- v1.0.70 -->
+<title>Invoice Generator · v1.0.74</title>
+<!-- v1.0.74 -->
 <meta name="description" content="Aplikasi pembuat invoice bata ringan & panel lantai multi-brand">
 <meta name="theme-color" content="#0e9e4a">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1588,6 +1588,11 @@
     font-size: 11.5px; line-height: 1.55;
   }
   .cp-warn.show { display: block; }
+  /* v1.0.71 (Tugas C): keterangan di bawah satu-satunya input harga */
+  .cp-oneline {
+    margin-top: 6px; font-size: 10.5px; line-height: 1.55; color: var(--brw-muted, #5C5C63);
+  }
+
   .cp-checkline {
     display: flex; align-items: flex-start; gap: 9px; margin-top: 14px;
     padding: 11px 12px; border-radius: 10px; background: #f8fafc; border: 1px solid #e2e8f0;
@@ -1916,6 +1921,10 @@
     color: var(--brw-text); font-weight: 500;
   }
   .brw-calc-table tr.on td { color: var(--brw-ink); font-weight: 700; background: #FFFDF2; }
+  /* v1.0.71: kolom yang paling dipakai kontraktor — sama seperti di website */
+  .brw-calc-table th.keycol { color: #A8850A; }
+  .brw-calc-table td.keycol { color: #8A6D06; font-weight: 700; }
+  .brw-calc-table tr.on td.keycol { color: #7A5F00; }
 </style>
 </head>
 <body>
@@ -1969,7 +1978,7 @@
     </div>
     <div class="min-w-0">
       <div class="text-[14px] font-bold text-slate-900 truncate leading-tight">Invoice Generator</div>
-      <div class="text-[10px] text-slate-400 truncate leading-tight" id="appVersionLabel">v1.0.69</div>
+      <div class="text-[10px] text-slate-400 truncate leading-tight" id="appVersionLabel">v1.0.74</div>
     </div>
   </div>
 
@@ -2436,8 +2445,10 @@
           <div class="cost-card-title">Harga Publik Website</div>
           <div class="cp-hint">
             Harga yang boleh dilihat orang di websitenya. Beda dari harga pabrik (itu modal)
-            dan beda dari harga per transaksi. Ketuk barisnya untuk mengisi.
-            Yang dicentang tampil <b>langsung</b> di website dalam hitungan detik.
+            dan beda dari harga per transaksi. Ketuk barisnya untuk mengisi — cukup
+            <b>satu angka</b>, website menulisnya "± Rp …". Yang dicentang tampil
+            <b>langsung</b> di website dalam hitungan detik; yang belum dicentang membuat
+            kartu produknya tidak punya elemen harga sama sekali.
           </div>
           <div id="cpHomeBanner"></div>
           <div id="cpList"></div>
@@ -3057,7 +3068,7 @@ const USER_PP_MAP = {
 // ════════════════════════════════════════════════════════════════
 //  CONSTANTS
 // ════════════════════════════════════════════════════════════════
-const APP_VERSION = '1.0.70';
+const APP_VERSION = '1.0.74';
 const BULAN_ID = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 
 const PANEL_LENGTHS = [97, 147, 172, 197, 222, 247, 272, 297, 322];
@@ -7143,38 +7154,26 @@ function cpProdLabel(p) { return p === 'panel' ? 'Panel Lantai' : 'Bata Ringan';
 function cpUnitFor(product) { return product === 'panel' ? 'm2' : 'm3'; }
 function cpUnitSymbol(product) { return cpUnitLabel(cpUnitFor(product)); }
 
-// ── v1.0.70 (Tugas C): angka "±" yang benar-benar muncul di website ──
-// Website TIDAK menampilkan rentang di kartu produk. Untuk tiap baris
-// terpublikasi dia mengambil titik tengah min–maks, merata-ratakan semua
-// baris yang relevan, lalu membulatkannya ke kelipatan 10.000.
+// ── v1.0.74 (Tugas C): SATU angka "±", satu kolom ────────────
+// Harga publik cuma satu angka perkiraan. Website membaca price_min,
+// membulatkannya ke kelipatan 10.000, lalu menulisnya "± Rp 900.000 /m³".
 //   · halaman /kota/<slug> → hanya baris kabupaten itu
 //   · beranda              → rata-rata SELURUH kabupaten yang dipublikasikan
-function cpMidpoint(min, max) {
-  const a = (min == null || min === '') ? null : Number(min);
-  const b = (max == null || max === '') ? null : Number(max);
-  const va = (a && a > 0) ? a : null;
-  const vb = (b && b > 0) ? b : null;
-  if (va == null && vb == null) return null;
-  if (va == null) return vb;
-  if (vb == null) return va;
-  return (va + vb) / 2;
+// v1.0.74: kolom price_max sudah DIHAPUS dari tabel city_pricing (migrasi
+// `drop_price_max_from_city_pricing`). Dulu kolom itu cuma diisi angka
+// kembar supaya sisa aturan lama tidak rewel — sekarang tidak ada lagi.
+function cpPriceOf(v) {
+  const n = (v == null || v === '') ? null : Number(v);
+  return (n && n > 0) ? n : null;
 }
 function cpRound10k(n) { return n == null ? null : Math.round(n / 10000) * 10000; }
 function cpApproxOf(rows) {
-  const mids = (rows || []).map(r => cpMidpoint(r.price_min, r.price_max)).filter(v => v != null);
-  if (!mids.length) return null;
-  return cpRound10k(mids.reduce((s, v) => s + v, 0) / mids.length);
+  const vals = (rows || []).map(r => cpPriceOf(r.price_min)).filter(v => v != null);
+  if (!vals.length) return null;
+  return cpRound10k(vals.reduce((s, v) => s + v, 0) / vals.length);
 }
 function cpApproxText(v, product) {
   return v == null ? '—' : `± Rp ${fmtRupiah(v)} /${cpUnitSymbol(product)}`;
-}
-function cpRangeText(min, max, product) {
-  const a = (min && Number(min) > 0) ? Number(min) : null;
-  const b = (max && Number(max) > 0) ? Number(max) : null;
-  const u = cpUnitSymbol(product);
-  if (a == null && b == null) return '—';
-  if (a != null && b != null && a !== b) return `Rp ${fmtRupiah(a)} – ${fmtRupiah(b)} /${u}`;
-  return `Rp ${fmtRupiah(a != null ? a : b)} /${u}`;
 }
 // Rata-rata beranda per produk, memakai seluruh baris yang dipublikasikan.
 // Bisa dititipi satu baris "seandainya" (draft) supaya modal bisa menunjukkan
@@ -7183,7 +7182,7 @@ function cpHomeApprox(product, draft) {
   const rows = cpStore
     .filter(r => r.product === product)
     .map(r => (draft && draft.id === r.id) ? draft : r)
-    .filter(r => r.is_published && cpMidpoint(r.price_min, r.price_max) != null);
+    .filter(r => r.is_published && cpPriceOf(r.price_min) != null);
   return { value: cpApproxOf(rows), count: rows.length };
 }
 function cpDateLabel(d) {
@@ -7250,15 +7249,9 @@ function cpRenderList() {
           <button class="cp-group-del" onclick="cpDeleteKab(${rows[0].id})">Hapus</button>
         </div>
         ${rows.map(r => {
-          const min = r.price_min == null ? null : Number(r.price_min);
-          const max = r.price_max == null ? null : Number(r.price_max);
-          const has = min != null || max != null;
-          let priceTxt = 'Belum diisi';
-          if (has) {
-            priceTxt = (min != null && max != null && max !== min)
-              ? `Rp ${fmtRupiah(min)} – ${fmtRupiah(max)}`
-              : `Rp ${fmtRupiah(min != null ? min : max)}`;
-          }
+          const val = cpPriceOf(r.price_min);
+          const has = val != null;
+          const priceTxt = has ? `Rp ${fmtRupiah(val)}` : 'Belum diisi';
           const approx = cpApproxOf([r]);
           return `<div class="cp-row" onclick="cpOpenEdit(${r.id})">
             <div class="cp-row-main">
@@ -7293,7 +7286,9 @@ function cpRenderHomeBanner() {
     ${line('Bata', bata, 'bata')}
     ${line('Panel', panel, 'panel')}
     <div class="sub">Beranda menampilkan rata-rata seluruh kabupaten yang dipublikasikan.
-    Kalau belum ada satu pun yang tayang, kartu produk berbunyi "Dihitung per proyek".</div>
+    Menayangkan harga satu kabupaten ikut menggeser angka ini. Kalau belum ada satu pun
+    yang tayang, kartu produk di website tidak menampilkan elemen harga sama sekali —
+    cuma "Ukuran &amp; spek" dan ringkasan dimensi.</div>
   </div>`;
 }
 
@@ -7324,14 +7319,10 @@ function cpFmtInput(el) {
 function cpCheckWarn() {
   const box = document.getElementById('cpWarn');
   if (!box) return;
-  const min = ilRpVal('cpMin');
-  const max = ilRpVal('cpMax');
+  const val = ilRpVal('cpPrice');
   const msgs = [];
-  if (min && max && max < min) {
-    msgs.push(`Harga maks (Rp ${fmtRupiah(max)}) lebih kecil dari harga min (Rp ${fmtRupiah(min)}).`);
-  }
-  if (min && cpWarnFloor && min < cpWarnFloor) {
-    msgs.push(`Harga min (Rp ${fmtRupiah(min)}) di bawah ${cpWarnLabel} (Rp ${fmtRupiah(cpWarnFloor)}). Cek lagi — bisa jadi rugi.`);
+  if (val && cpWarnFloor && val < cpWarnFloor) {
+    msgs.push(`Harga ini (Rp ${fmtRupiah(val)}) di bawah ${cpWarnLabel} (Rp ${fmtRupiah(cpWarnFloor)}). Cek lagi — bisa jadi rugi.`);
   }
   box.innerHTML = msgs.map(m => '⚠️ ' + m).join('<br>');
   box.classList.toggle('show', msgs.length > 0);
@@ -7342,6 +7333,7 @@ function cpOpenEdit(id) {
   if (!r) return;
   const st = cpRefStats(r.kabupaten, r.product);
   const u = cpUnitSymbol(r.product);   // v1.0.70: satuan ikut produk, tidak bisa diedit
+  const cur = cpPriceOf(r.price_min);
   cpEditId = id;
   // Patokan peringatan: modal riil kalau ada (sudah termasuk ongkir),
   // kalau belum ada transaksi jatuh ke harga pabrik.
@@ -7371,24 +7363,16 @@ function cpOpenEdit(id) {
       </div>
     </div>
 
-    <label class="cost-modal-label">Harga Minimum (Rp)</label>
+    <label class="cost-modal-label">Harga Kurang Lebih (Rp)</label>
     <div class="cost-price-box">
       <span class="rp">Rp</span>
-      <input id="cpMin" inputmode="numeric" placeholder="0"
-             value="${r.price_min != null ? fmtRupiah(Number(r.price_min)) : ''}"
+      <input id="cpPrice" inputmode="numeric" placeholder="0"
+             value="${cur != null ? fmtRupiah(cur) : ''}"
              oninput="cpFmtInput(this); cpCheckWarn(); cpUpdatePreview()">
       <span class="suffix">/${u}</span>
     </div>
-
-    <div style="height:10px;"></div>
-    <label class="cost-modal-label">Harga Maksimum (Rp)</label>
-    <div class="cost-price-box">
-      <span class="rp">Rp</span>
-      <input id="cpMax" inputmode="numeric" placeholder="0"
-             value="${r.price_max != null ? fmtRupiah(Number(r.price_max)) : ''}"
-             oninput="cpFmtInput(this); cpCheckWarn(); cpUpdatePreview()">
-      <span class="suffix">/${u}</span>
-    </div>
+    <div class="cp-oneline">Cukup satu angka. Website menulisnya "± Rp …" — ujungnya tetap
+      dinegosiasi lewat WhatsApp.</div>
 
     <div class="cp-warn" id="cpWarn"></div>
 
@@ -7402,7 +7386,7 @@ function cpOpenEdit(id) {
       <input type="checkbox" id="cpPub" ${r.is_published ? 'checked' : ''} onchange="cpUpdatePreview()">
       <span>
         <span class="t">Tayangkan harga ini di website</span>
-        <span class="s">Begitu disimpan, angkanya langsung dipakai website. Harga min &amp; maks wajib terisi.</span>
+        <span class="s">Begitu disimpan, angkanya langsung dipakai website. Harganya wajib terisi.</span>
       </span>
     </label>
 
@@ -7424,10 +7408,9 @@ function cpUpdatePreview() {
   const r = cpStore.find(x => x.id === cpEditId);
   if (!r) return;
 
-  const min = ilRpVal('cpMin');
-  const max = ilRpVal('cpMax');
+  const val = ilRpVal('cpPrice');
   const pub = !!(document.getElementById('cpPub') || {}).checked;
-  const draft = { id: r.id, product: r.product, is_published: pub, price_min: min || null, price_max: max || null };
+  const draft = { id: r.id, product: r.product, is_published: pub, price_min: val || null };
 
   const kartu = cpApproxOf([draft]);
   const home  = cpHomeApprox(r.product, draft);
@@ -7438,35 +7421,29 @@ function cpUpdatePreview() {
     <div class="brw-approx-head">Yang benar-benar muncul di website</div>
     <div class="brw-approx-row">
       <span class="where">Kartu produk <b>/kota/${h(r.slug)}</b></span>
-      <span class="num ${belum ? 'off' : 'key'}">${belum ? 'Dihitung per proyek' : `± Rp ${fmtRupiah(kartu)} /${u}`}</span>
-    </div>
-    <div class="brw-approx-row">
-      <span class="where">Kartu <b>"Kisaran harga per kabupaten"</b> di beranda &amp; kalimat harga di FAQ</span>
-      <span class="num ${belum ? 'off' : ''}">${belum ? '—' : cpRangeText(min, max, r.product)}</span>
+      <span class="num ${belum ? 'off' : 'key'}">${belum ? '—' : `± Rp ${fmtRupiah(kartu)} /${u}`}</span>
     </div>
     <div class="brw-approx-row">
       <span class="where">Kartu produk di <b>beranda</b> (rata-rata semua kabupaten)</span>
-      <span class="num ${home.value == null ? 'off' : ''}">${home.value == null ? 'Dihitung per proyek' : `± Rp ${fmtRupiah(home.value)} /${u}`}</span>
+      <span class="num ${home.value == null ? 'off' : ''}">${home.value == null ? '—' : `± Rp ${fmtRupiah(home.value)} /${u}`}</span>
     </div>
-    ${!pub ? `<div class="brw-approx-note">Belum dicentang tayang — selama itu website menampilkan
-      <b>"Dihitung per proyek"</b> dan mengajak kirim volume lewat WhatsApp. Angka di atas cuma bayangan.</div>` : ''}
+    ${!pub ? `<div class="brw-approx-note">Belum tayang — kartu produk di website hanya menampilkan
+      <b>Ukuran &amp; spek</b> dan ringkasan dimensi, tanpa elemen harga sama sekali. Angka di atas cuma bayangan.</div>` : ''}
   </div>`;
 }
 
 async function cpSave(id) {
   const r = cpStore.find(x => x.id === id);
   if (!r) return;
-  const min = ilRpVal('cpMin');
-  const max = ilRpVal('cpMax');
+  const val = ilRpVal('cpPrice');
   const note = (document.getElementById('cpNote') || {}).value?.trim() || '';
   const pub = !!(document.getElementById('cpPub') || {}).checked;
 
-  if (min && max && max < min) { toast('Harga maks tidak boleh lebih kecil dari harga min', 'error'); return; }
-  if (pub && (!min || !max)) { toast('Kalau mau tampil di web, harga min & maks wajib diisi', 'error'); return; }
+  if (pub && !val) { toast('Kalau mau tampil di web, harganya wajib diisi', 'error'); return; }
 
+  // v1.0.74: satu angka, satu kolom. price_max sudah tidak ada lagi.
   const patch = {
-    price_min: min || null,
-    price_max: max || null,
+    price_min: val || null,
     note,
     is_published: pub,
     unit: cpUnitFor(r.product),   // v1.0.70 (Tugas D): selalu ikut produk
@@ -7564,15 +7541,22 @@ async function cpDeleteKab(rowId) {
 //  yang satunya harus ikut diubah — kalau tidak, angka di penawaran
 //  beda dengan angka yang dilihat calon pembeli di website.
 //
-//  Sengaja TIDAK ada berat per pcs / per panel: angka berat jenis
-//  resmi dari pabrik belum ada, dan website pun tidak menampilkannya.
-//  Jangan mengarang. Kalau data resminya sudah dapat, kolom
-//  "Isi/1 truk" bisa diganti "Berat/pcs" di dua tempat sekaligus.
+//  v1.0.71: berat jenis resminya sudah dapat, diambil dari halaman pabrik
+//  bataringanbricon.com — bata ringan 600 kg/m³ (berat jenis normal; kering
+//  525) dan panel lantai 650 kg/m³ (berat jenis kering; normal 700). Kalau
+//  angka pabriknya berubah, ubah di DUA tempat: website dan dashboard.
+//
+//  Pabrik juga punya tebal bata 150 & 200 mm dan bentang panel sampai 600 cm,
+//  tapi website sengaja cuma menampilkan ukuran yang benar-benar distok
+//  Procon Lite. Kalau stoknya bertambah, cukup tambahkan angkanya ke daftar
+//  di bawah — rumusnya sudah otomatis.
 // ════════════════════════════════════════════════════════════════
 
 const BRW_BATA_MM   = [75, 100, 125];                 // tebal, mm (600 × 200 mm)
 const BRW_PANEL_MM  = [1470, 2000, 2500, 3220];       // bentang, mm (lebar 600, tebal 125)
 const BRW_TRUK_M3   = 11.52;                          // 1 truk = 11,52 m³
+const BRW_BATA_KGM3  = 600;                           // berat jenis bata ringan, kg/m³
+const BRW_PANEL_KGM3 = 650;                           // berat jenis panel lantai, kg/m³
 
 function brwNum(v, dec) {
   return Number(v).toLocaleString('id-ID', { minimumFractionDigits: dec, maximumFractionDigits: dec });
@@ -7584,6 +7568,7 @@ function brwBataCalc(mm) {
     mm,
     cm: mm / 10,
     volume: vol,                                  // m³ per pcs
+    berat: vol * BRW_BATA_KGM3,                   // kg per pcs
     perM3: Math.round(1 / vol),                   // pcs per m³
     perTruk: Math.round(BRW_TRUK_M3 / vol),       // pcs per truk
     dinding: 1 / (mm / 1000),                     // m² dinding per m³
@@ -7592,10 +7577,13 @@ function brwBataCalc(mm) {
 
 function brwPanelCalc(mm) {
   const luas = (mm / 1000) * 0.6;                 // m² per panel
+  const vol  = luas * 0.125;                      // m³ per panel
   return {
     mm,
     m: mm / 1000,
     luas,
+    volume: vol,
+    berat: Math.round(vol * BRW_PANEL_KGM3),      // kg per panel, dibulatkan
     per10: Math.ceil(10 / luas),
     per100: Math.ceil(100 / luas),
   };
@@ -7640,29 +7628,31 @@ function brwCalcRender() {
       <div class="lbl">Dimensi per pcs</div>
       <div class="big">600 × 200 × ${brwNum(c.mm, 0)}<span class="u">mm</span></div>
       <div class="brw-plate-grid">
-        <div class="cell"><div class="lbl">Isi / m³</div><div class="num key">${brwNum(c.perM3, 0)}<span class="u">pcs</span></div></div>
-        <div class="cell"><div class="lbl">Isi / 1 truk</div><div class="num">${brwNum(c.perTruk, 0)}<span class="u">pcs</span></div></div>
-        <div class="cell"><div class="lbl">Dinding / m³</div><div class="num">${brwNum(c.dinding, 1)}<span class="u">m²</span></div></div>
+        <div class="cell"><div class="lbl">Berat / pcs</div><div class="num">${brwNum(c.berat, 1)}<span class="u">kg</span></div></div>
+        <div class="cell"><div class="lbl">Isi / m³</div><div class="num">${brwNum(c.perM3, 0)}<span class="u">pcs</span></div></div>
+        <div class="cell"><div class="lbl">Dinding / m³</div><div class="num key">${brwNum(c.dinding, 2)}<span class="u">m²</span></div></div>
       </div>
-      <div class="sub">Volume 1 pcs = ${brwNum(c.volume, 4)} m³ · 1 truk = ${brwNum(BRW_TRUK_M3, 2)} m³</div>
+      <div class="sub">Volume 1 pcs = ${brwNum(c.volume, 4)} m³ · berat jenis ${brwNum(BRW_BATA_KGM3, 0)} kg/m³ ·
+        1 truk (${brwNum(BRW_TRUK_M3, 2)} m³) = ${brwNum(c.perTruk, 0)} pcs</div>
     </div>`;
     extra.innerHTML = `
       <table class="brw-calc-table">
-        <thead><tr><th>Tebal</th><th>Isi/m³</th><th>Isi/1 truk</th><th>Dinding/m³</th></tr></thead>
+        <thead><tr><th>Tebal</th><th>Berat/pcs</th><th>Isi/m³</th><th class="keycol">Dinding/m³</th></tr></thead>
         <tbody>${BRW_BATA_MM.map(mm => {
           const r = brwBataCalc(mm);
           return `<tr class="${mm === cur ? 'on' : ''}">
             <td>${brwNum(r.cm, mm % 10 === 0 ? 0 : 1)} cm</td>
+            <td>${brwNum(r.berat, 1)} kg</td>
             <td>${brwNum(r.perM3, 0)} pcs</td>
-            <td>${brwNum(r.perTruk, 0)} pcs</td>
-            <td>${brwNum(r.dinding, 1)} m²</td>
+            <td class="keycol">${brwNum(r.dinding, 2)} m²</td>
           </tr>`;
         }).join('')}</tbody>
       </table>
       <div class="brw-calc-note">
-        Berat per pcs sengaja tidak ditampilkan — angka berat jenis resmi dari pabrik belum ada,
-        dan website juga tidak menampilkannya. Kalau nanti dapat datanya dari BRICON, kolom
-        "Isi/1 truk" bisa diganti "Berat/pcs" di dashboard dan website sekaligus.
+        Angka ini sama persis dengan mode "Ukuran &amp; spek" di kartu produk website.
+        Berat memakai berat jenis normal <b>600 kg/m³</b> dari halaman resmi pabrik
+        (berat jenis kering 525 kg/m³). Kolom <b>Dinding/m³</b> yang paling sering dipakai
+        kontraktor untuk menghitung kebutuhan.
       </div>`;
   } else {
     const c = brwPanelCalc(cur);
@@ -7670,28 +7660,30 @@ function brwCalcRender() {
       <div class="lbl">Dimensi per panel</div>
       <div class="big">${c.mm} × 600 × 125<span class="u">mm</span></div>
       <div class="brw-plate-grid">
-        <div class="cell"><div class="lbl">Luas / panel</div><div class="num key">${brwNum(c.luas, 2)}<span class="u">m²</span></div></div>
-        <div class="cell"><div class="lbl">Per 10 m²</div><div class="num">${brwNum(c.per10, 0)}<span class="u">pnl</span></div></div>
-        <div class="cell"><div class="lbl">Per 100 m²</div><div class="num">${brwNum(c.per100, 0)}<span class="u">pnl</span></div></div>
+        <div class="cell"><div class="lbl">Luas / panel</div><div class="num">${brwNum(c.luas, 2)}<span class="u">m²</span></div></div>
+        <div class="cell"><div class="lbl">Berat / panel</div><div class="num">${brwNum(c.berat, 0)}<span class="u">kg</span></div></div>
+        <div class="cell"><div class="lbl">Per 10 m²</div><div class="num key">${brwNum(c.per10, 0)}<span class="u">pnl</span></div></div>
       </div>
-      <div class="sub">Bentang ${brwNum(c.m, 2)} m · lebar 0,60 m · tebal 125 mm</div>
+      <div class="sub">Bentang ${brwNum(c.m, 2)} m · lebar 0,60 m · tebal 125 mm · berat jenis
+        ${brwNum(BRW_PANEL_KGM3, 0)} kg/m³ · per 100 m² = ${brwNum(c.per100, 0)} panel</div>
     </div>`;
     extra.innerHTML = `
       <table class="brw-calc-table">
-        <thead><tr><th>Bentang</th><th>Luas/panel</th><th>Per 10 m²</th><th>Per 100 m²</th></tr></thead>
+        <thead><tr><th>Bentang</th><th>Luas/panel</th><th>Berat/panel</th><th class="keycol">Per 10 m²</th></tr></thead>
         <tbody>${BRW_PANEL_MM.map(mm => {
           const r = brwPanelCalc(mm);
           return `<tr class="${mm === cur ? 'on' : ''}">
             <td>${brwNum(r.m, 2)} m</td>
             <td>${brwNum(r.luas, 2)} m²</td>
-            <td>${brwNum(r.per10, 0)} panel</td>
-            <td>${brwNum(r.per100, 0)} panel</td>
+            <td>${brwNum(r.berat, 0)} kg</td>
+            <td class="keycol">${brwNum(r.per10, 0)} panel</td>
           </tr>`;
         }).join('')}</tbody>
       </table>
       <div class="brw-calc-note">
         Jumlah panel dibulatkan <b>ke atas</b> — sisa potongan tetap dihitung satu panel utuh,
-        sama seperti perhitungan di website.
+        sama seperti perhitungan di website. Berat memakai berat jenis kering <b>650 kg/m³</b>
+        dari halaman resmi pabrik (berat jenis normal 700 kg/m³).
       </div>`;
   }
 }
