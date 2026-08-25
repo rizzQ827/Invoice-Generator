@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Invoice Generator · v1.0.69</title>
-<!-- v1.0.69 -->
+<title>Invoice Generator · v1.0.70</title>
+<!-- v1.0.70 -->
 <meta name="description" content="Aplikasi pembuat invoice bata ringan & panel lantai multi-brand">
 <meta name="theme-color" content="#0e9e4a">
 <meta name="mobile-web-app-capable" content="yes">
@@ -19,7 +19,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <script>
   tailwind.config = {
     theme: {
@@ -1541,6 +1541,10 @@
   }
   .cp-row-price.empty { color: #cbd5e1; font-weight: 700; }
   .cp-row-price .unit { font-size: 10.5px; color: #94a3b8; font-family: 'Inter', sans-serif; font-weight: 600; }
+  .cp-row-approx {
+    font-size: 10px; color: #8A8A92; margin-top: 3px; line-height: 1.4;
+  }
+  .cp-row-approx b { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #D42B2B; }
   .cp-pub {
     flex-shrink: 0; font-size: 10px; font-weight: 800; border-radius: 999px;
     padding: 3px 9px; letter-spacing: .02em;
@@ -1672,6 +1676,246 @@
     padding: 5px 11px; white-space: nowrap;
   }
   .tm-rating-label .num { font-family: 'JetBrains Mono', monospace; margin-right: 4px; }
+
+  /* ═══════════════════════════════════════════════════════════════
+     v1.0.70: TOKEN VISUAL WEBSITE BRICON  (Tugas F)
+     Dipakai HANYA di tiga section penyuplai website — Harga Publik,
+     Testimoni, dan Kalkulator Ukuran — supaya dashboard dan
+     bata-ringan-bricon.com terasa satu sistem. Sisa aplikasi tetap
+     memakai palet hijau Citicon seperti biasa.
+     ═══════════════════════════════════════════════════════════════ */
+  .brw {
+    --brw-bg:      #FAFAFA;
+    --brw-surface: #FFFFFF;
+    --brw-ink:     #1C1C1E;
+    --brw-text:    #2A2A2E;
+    --brw-muted:   #5C5C63;
+    --brw-muted2:  #8A8A92;
+    --brw-red:     #D42B2B;
+    --brw-red-dark:#B71F1F;
+    --brw-yellow:  #F5C200;
+    --brw-wa:      #25D366;
+    --brw-line:    #E6E6E8;
+    --brw-track:   #F1F0EE;
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    color: var(--brw-text);
+  }
+  .brw .cost-card-title { font-family: 'Plus Jakarta Sans', 'Inter', sans-serif; color: var(--brw-ink); }
+  .brw .cost-modal-label { font-family: 'Plus Jakarta Sans', 'Inter', sans-serif; }
+
+  /* Garis judul kecil di atas section — pengganti label generik. */
+  .brw-eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-size: 9.5px; font-weight: 700;
+    letter-spacing: .09em; text-transform: uppercase; color: var(--brw-red);
+    margin-bottom: 4px;
+  }
+
+  /* ── Komponen 1: plat data gelap ───────────────────────────── */
+  .brw-plate {
+    position: relative; overflow: hidden;
+    background: var(--brw-ink); border-radius: 12px; padding: 15px 16px;
+    color: #fff;
+  }
+  .brw-plate::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  .brw-plate > * { position: relative; }
+  .brw-plate .lbl {
+    font-family: 'JetBrains Mono', monospace; font-size: 9.5px; font-weight: 700;
+    letter-spacing: .06em; text-transform: uppercase; color: rgba(255,255,255,.55);
+  }
+  .brw-plate .big {
+    font-family: 'JetBrains Mono', monospace; font-size: 21px; font-weight: 700;
+    color: #fff; line-height: 1.15; margin-top: 5px; white-space: nowrap;
+  }
+  .brw-plate .big .u { font-size: 12px; color: rgba(255,255,255,.55); margin-left: 2px; }
+  .brw-plate .big.key { color: var(--brw-yellow); }
+  .brw-plate .sub {
+    font-size: 10.5px; color: rgba(255,255,255,.55); margin-top: 6px; line-height: 1.5;
+  }
+  .brw-plate-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px;
+    border-top: 1px solid rgba(255,255,255,.12); padding-top: 12px;
+  }
+  .brw-plate-grid .cell .lbl { font-size: 8.5px; letter-spacing: .04em; }
+  .brw-plate-grid .cell .num {
+    font-family: 'JetBrains Mono', monospace; font-size: 15px; font-weight: 700;
+    color: #fff; margin-top: 3px; white-space: nowrap;
+  }
+  .brw-plate-grid .cell .num.key { color: var(--brw-yellow); }
+  .brw-plate-grid .cell .num .u { font-size: 10px; color: rgba(255,255,255,.55); margin-left: 2px; }
+  @media (max-width: 400px) {
+    .brw-plate-grid { gap: 7px; }
+    .brw-plate-grid .cell .num { font-size: 13px; }
+  }
+
+  /* ── Komponen 2: segmented control ─────────────────────────── */
+  .brw-seg {
+    display: flex; gap: 4px; padding: 4px; border-radius: 11px;
+    background: var(--brw-track); border: 1px solid var(--brw-line);
+  }
+  .brw-seg button {
+    flex: 1; min-width: 0; height: 32px; border: none; border-radius: 8px;
+    background: transparent; cursor: pointer; color: var(--brw-muted);
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700;
+    letter-spacing: .05em; text-transform: uppercase;
+    transition: background .14s, color .14s, box-shadow .14s;
+  }
+  .brw-seg button.active {
+    background: var(--brw-yellow); color: var(--brw-ink);
+    box-shadow: 0 2px 6px rgba(28,28,30,.16);
+  }
+
+  /* ── Komponen 3: pill pemilih ukuran ───────────────────────── */
+  .brw-pills { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 12px; }
+  .brw-pill {
+    flex: 1 1 0; min-width: 74px; height: 48px; border-radius: 9px;
+    border: 1px solid var(--brw-line); background: var(--brw-surface);
+    cursor: pointer; padding: 0 6px; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 1px;
+    transition: background .14s, border-color .14s;
+  }
+  .brw-pill .a {
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700;
+    color: var(--brw-ink); line-height: 1.1;
+  }
+  .brw-pill .b {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 500;
+    color: var(--brw-muted2); line-height: 1.1;
+  }
+  .brw-pill.on { background: var(--brw-ink); border-color: var(--brw-ink); }
+  .brw-pill.on .a { color: #fff; }
+  .brw-pill.on .b { color: var(--brw-yellow); }
+
+  /* ── Tugas C: pratinjau angka yang muncul di website ───────── */
+  .brw-approx {
+    border: 1px solid var(--brw-line); border-radius: 11px; overflow: hidden;
+    background: var(--brw-surface); margin-top: 12px;
+  }
+  .brw-approx-head {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700;
+    letter-spacing: .07em; text-transform: uppercase; color: var(--brw-muted2);
+    padding: 8px 11px 7px; background: var(--brw-track);
+    border-bottom: 1px solid var(--brw-line);
+  }
+  .brw-approx-row {
+    display: flex; align-items: center; gap: 8px; padding: 9px 11px;
+    border-bottom: 1px solid #F1F1F3;
+  }
+  .brw-approx-row:last-child { border-bottom: none; }
+  .brw-approx-row .where { font-size: 10.5px; color: var(--brw-muted); line-height: 1.4; min-width: 0; flex: 1; }
+  .brw-approx-row .where b { color: var(--brw-text); font-weight: 700; }
+  .brw-approx-row .num {
+    font-family: 'JetBrains Mono', monospace; font-size: 12.5px; font-weight: 700;
+    color: var(--brw-ink); white-space: nowrap; flex-shrink: 0;
+  }
+  .brw-approx-row .num.key { color: var(--brw-red); }
+  .brw-approx-row .num.off { color: var(--brw-muted2); font-weight: 500; }
+  .brw-approx-note {
+    padding: 8px 11px; font-size: 10px; line-height: 1.5; color: #92400e;
+    background: #FFFBEB; border-top: 1px solid #FDE68A;
+  }
+
+  /* Banner rata-rata beranda di atas daftar harga publik */
+  .brw-home-banner { margin-bottom: 12px; }
+  .brw-home-banner .row {
+    display: flex; align-items: baseline; gap: 8px; margin-top: 8px;
+  }
+  .brw-home-banner .row:first-of-type { margin-top: 10px; }
+  .brw-home-banner .row .k {
+    font-family: 'JetBrains Mono', monospace; font-size: 9.5px; font-weight: 700;
+    letter-spacing: .05em; text-transform: uppercase; color: rgba(255,255,255,.55);
+    width: 44px; flex-shrink: 0;
+  }
+  .brw-home-banner .row .v {
+    font-family: 'JetBrains Mono', monospace; font-size: 15px; font-weight: 700; color: #fff;
+  }
+  .brw-home-banner .row .v.key { color: var(--brw-yellow); }
+  .brw-home-banner .row .v .u { font-size: 10px; color: rgba(255,255,255,.55); margin-left: 2px; }
+  .brw-home-banner .row .n { font-size: 10px; color: rgba(255,255,255,.45); }
+
+  /* ── Tugas B: pratinjau kartu ulasan seperti di website ────── */
+  .tm-prev {
+    margin-top: 10px; border: 1px solid var(--brw-line); border-radius: 11px;
+    background: var(--brw-bg); padding: 11px 12px;
+  }
+  .tm-prev.featured { background: var(--brw-ink); border-color: var(--brw-ink); }
+  .tm-prev-tag {
+    font-family: 'JetBrains Mono', monospace; font-size: 8.5px; font-weight: 700;
+    letter-spacing: .07em; text-transform: uppercase; color: var(--brw-muted2);
+    margin-bottom: 7px;
+  }
+  .tm-prev.featured .tm-prev-tag { color: var(--brw-yellow); }
+  .tm-prev-top { display: flex; align-items: center; gap: 9px; }
+  .tm-prev-av {
+    width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--brw-yellow); color: var(--brw-ink);
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700;
+    letter-spacing: .02em;
+  }
+  .tm-prev-id { min-width: 0; }
+  .tm-prev-name {
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif; font-size: 12.5px;
+    font-weight: 700; color: var(--brw-ink); line-height: 1.25;
+  }
+  .tm-prev.featured .tm-prev-name { color: #fff; }
+  .tm-prev-meta {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 500;
+    letter-spacing: .05em; text-transform: uppercase; color: var(--brw-muted2);
+    margin-top: 2px; line-height: 1.3;
+  }
+  .tm-prev.featured .tm-prev-meta { color: rgba(255,255,255,.55); }
+  .tm-prev-quote {
+    font-size: 12px; line-height: 1.65; color: var(--brw-text); margin-top: 9px;
+  }
+  .tm-prev.featured .tm-prev-quote { color: rgba(255,255,255,.88); }
+  .tm-prev-stars { margin-top: 8px; }
+
+  .tm-featured-flag {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700;
+    letter-spacing: .05em; text-transform: uppercase;
+    background: var(--brw-ink); color: var(--brw-yellow);
+    border-radius: 999px; padding: 3px 9px; flex-shrink: 0;
+  }
+  .tm-badge.live    { background: #dcfce7; color: #0a7a38; }
+  .tm-badge.notlive { background: #f1f5f9; color: #8A8A92; }
+  .tm-act[disabled] { opacity: .5; cursor: not-allowed; }
+  .tm-act.consent { color: #b45309; border-color: #fde68a; background: #fffbeb; }
+  .tm-lock-note {
+    font-size: 10.5px; color: #b91c1c; background: #fef2f2; border: 1px solid #fecaca;
+    border-radius: 8px; padding: 7px 9px; margin-top: 8px; line-height: 1.5;
+  }
+  .tm-count {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 500;
+    color: #94a3b8; margin-top: 5px; text-align: right;
+  }
+  .tm-count.good { color: #0a7a38; }
+  .tm-count.warn { color: #b45309; }
+
+  /* ── Tugas E: kalkulator ukuran ────────────────────────────── */
+  .brw-calc-note {
+    font-size: 10.5px; color: var(--brw-muted2); line-height: 1.55; margin-top: 10px;
+  }
+  .brw-calc-table {
+    width: 100%; border-collapse: collapse; margin-top: 12px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  }
+  .brw-calc-table th {
+    text-align: right; font-size: 8.5px; font-weight: 700; letter-spacing: .05em;
+    text-transform: uppercase; color: var(--brw-muted2); padding: 0 0 6px;
+    border-bottom: 1px solid var(--brw-line);
+  }
+  .brw-calc-table th:first-child, .brw-calc-table td:first-child { text-align: left; }
+  .brw-calc-table td {
+    text-align: right; padding: 7px 0; border-bottom: 1px solid #F1F1F3;
+    color: var(--brw-text); font-weight: 500;
+  }
+  .brw-calc-table tr.on td { color: var(--brw-ink); font-weight: 700; background: #FFFDF2; }
 </style>
 </head>
 <body>
@@ -2187,12 +2431,15 @@
 
       <!-- ── Section: Harga Publik Website (khusus Procon lite) ── -->
       <div data-csec="hargapublik">
-        <div class="cost-card" id="cpCard">
+        <div class="cost-card brw" id="cpCard">
+          <div class="brw-eyebrow">bata-ringan-bricon.com</div>
           <div class="cost-card-title">Harga Publik Website</div>
           <div class="cp-hint">
-            Harga yang boleh dilihat orang di <b>bata-ringan-bricon.com</b>. Beda dari harga pabrik
-            (itu modal) dan beda dari harga per transaksi. Ketuk barisnya untuk mengisi.
+            Harga yang boleh dilihat orang di websitenya. Beda dari harga pabrik (itu modal)
+            dan beda dari harga per transaksi. Ketuk barisnya untuk mengisi.
+            Yang dicentang tampil <b>langsung</b> di website dalam hitungan detik.
           </div>
+          <div id="cpHomeBanner"></div>
           <div id="cpList"></div>
           <button class="plog-add-btn" onclick="cpOpenAddKab()">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -2203,18 +2450,40 @@
 
       <!-- ── Section: Testimoni (khusus Procon lite) ── -->
       <div data-csec="testimoni">
-        <div class="cost-card" id="tmCard">
+        <div class="cost-card brw" id="tmCard">
+          <div class="brw-eyebrow">bata-ringan-bricon.com</div>
           <div class="cost-card-title">Testimoni Pelanggan</div>
           <div class="cp-hint">
-            Salin balasan WhatsApp pelanggan ke sini. Testimoni <b>tidak</b> dibaca website
-            langsung dari database — nanti ditanam ke file HTML supaya Google bisa membacanya.
-            Tombol "Tandai sudah di web" cuma penanda, bukan tombol publish.
+            Salin balasan WhatsApp pelanggan ke sini. Website <b>membaca langsung</b> dari
+            database: begitu ditayangkan, ulasannya muncul di section "Kata pembeli kami"
+            dalam hitungan detik. Yang paling baru jadi kartu besar di paling depan.
           </div>
           <div id="tmList"></div>
           <button class="plog-add-btn" onclick="tmOpenAdd()">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Tambah Testimoni
+            Tambah Ulasan
           </button>
+        </div>
+      </div>
+
+      <!-- ── Section: Kalkulator Ukuran (v1.0.70, sama persis dengan website) ── -->
+      <div data-csec="ukuran">
+        <div class="cost-card brw" id="brwCalcCard">
+          <div class="brw-eyebrow">sama dengan kartu produk di website</div>
+          <div class="cost-card-title">Kalkulator Ukuran</div>
+          <div class="cp-hint">
+            Angka di sini dipakai rumus yang sama dengan mode "Ukuran &amp; spek" di
+            bata-ringan-bricon.com — jadi penawaran yang kamu kirim tidak akan beda
+            dengan yang dilihat calon pembeli.
+          </div>
+          <div class="brw-seg" id="brwCalcSeg">
+            <button type="button" class="active" data-p="bata" onclick="brwCalcSetProduct('bata')">Bata Ringan</button>
+            <button type="button" data-p="panel" onclick="brwCalcSetProduct('panel')">Panel Lantai</button>
+          </div>
+          <div class="brw-pills" id="brwCalcPills"></div>
+          <div style="height:12px;"></div>
+          <div id="brwCalcPlate"></div>
+          <div id="brwCalcExtra"></div>
         </div>
       </div>
 
@@ -2788,7 +3057,7 @@ const USER_PP_MAP = {
 // ════════════════════════════════════════════════════════════════
 //  CONSTANTS
 // ════════════════════════════════════════════════════════════════
-const APP_VERSION = '1.0.69';
+const APP_VERSION = '1.0.70';
 const BULAN_ID = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 
 const PANEL_LENGTHS = [97, 147, 172, 197, 222, 247, 272, 297, 322];
@@ -4961,6 +5230,7 @@ const CSEC_ICON = {
   pabrik:      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16h.01"/><path d="M16 16h.01"/><path d="M3 19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5a.5.5 0 0 0-.769-.422l-4.462 2.844A.5.5 0 0 1 15 10.5v-2a.5.5 0 0 0-.769-.422L9.77 10.922A.5.5 0 0 1 9 10.5V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z"/><path d="M8 16h.01"/></svg>`,
   hargapublik: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 13h6"/><path d="m16.5 6.5-3.914-3.914A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l1.79-1.79"/><path d="M19 10v6"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg>`,
   testimoni:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg>`,
+  ukuran:      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.3 8.7 8.7 21.3a1 1 0 0 1-1.4 0l-4.6-4.6a1 1 0 0 1 0-1.4L15.3 2.7a1 1 0 0 1 1.4 0l4.6 4.6a1 1 0 0 1 0 1.4"/><path d="m7.5 10.5 2 2"/><path d="m10.5 7.5 2 2"/><path d="m13.5 4.5 2 2"/><path d="m4.5 13.5 2 2"/></svg>`,
   peta:        `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"/><path d="M15 5.764v15"/><path d="M9 3.236v15"/></svg>`,
   kontak:      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 2v2"/><path d="M7 21v-2a2 2 0 012-2h6a2 2 0 012 2v2"/><path d="M8 2v2"/><circle cx="12" cy="10" r="3"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>`,
   larangan:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>`,
@@ -4971,6 +5241,7 @@ const COST_SECTIONS = [
   { id: 'pabrik',      label: 'Harga Pabrik' },
   { id: 'hargapublik', label: 'Harga Publik', lite: true },
   { id: 'testimoni',   label: 'Testimoni',    lite: true },
+  { id: 'ukuran',      label: 'Ukuran' },
   { id: 'peta',        label: 'Peta' },
   { id: 'kontak',      label: 'Kontak' },
   { id: 'larangan',    label: 'Larangan Truk' },
@@ -5407,6 +5678,21 @@ const IL_SOURCE_OPTIONS = {
   lainnya:           'Lainnya',
 };
 function ilSourceLabel(v) { return IL_SOURCE_OPTIONS[v] || ''; }
+
+// ── v1.0.70 (Tugas G): ukuran yang dibawa pesan WhatsApp ─────
+// CTA di kartu produk website menempelkan pilihan ukuran ke pesan, mis.
+//   "Halo, saya ingin tanya Bata Ringan BRICON - Surabaya - Produk Bata (tebal 10 cm)"
+// Potongan dalam kurung itu sinyal niat beli yang bagus: orang yang sudah
+// memilih ketebalan biasanya sudah tahu kebutuhannya. Simpan apa adanya.
+function ilSizeHintSelectHtml(id, product, current) {
+  const opts = brwSizeHintOptions(product);
+  const known = opts.includes(current);
+  return `<select class="input" id="${id}">
+    <option value="">— tidak disebut —</option>
+    ${opts.map(o => `<option value="${h(o)}"${current === o ? ' selected' : ''}>${h(o)}</option>`).join('')}
+    ${(current && !known) ? `<option value="${h(current)}" selected>${h(current)}</option>` : ''}
+  </select>`;
+}
 function ilSourceSelectHtml(id, current) {
   return `<select class="input" id="${id}">
     <option value="">— belum tahu —</option>
@@ -5456,6 +5742,14 @@ function ilOpenAdd() {
     <div style="height:10px;"></div>
     <label class="cost-modal-label">Asal Lead (opsional — buat menghitung ROI iklan)</label>
     ${ilSourceSelectHtml('ilSource', '')}
+
+    <div style="height:10px;"></div>
+    <label class="cost-modal-label">Ukuran yang Disebut (dari pesan WA website)</label>
+    ${ilSizeHintSelectHtml('ilSizeHint', costState.product, '')}
+    <div style="font-size:10.5px;color:#94a3b8;margin-top:5px;line-height:1.5;">
+      Pesan WA dari website membawa ukurannya dalam kurung, mis. <b>(tebal 10 cm)</b>.
+      Yang sudah memilih ukuran biasanya sudah tahu kebutuhannya.
+    </div>
 
     <div style="height:12px;"></div>
     ${ilAddModalFieldHtml(costState.product)}
@@ -5566,6 +5860,7 @@ async function ilSaveNew() {
     modal_75: isBataForm && ilFormBataSize === '7,5cm' ? (modal || null) : null,
     status: 'nanya', note, pickup_method: ilFormPickup,
     source: (document.getElementById('ilSource') || {}).value || null,  // v1.0.66
+    size_hint: (document.getElementById('ilSizeHint') || {}).value || null,  // v1.0.70
     name_locked: !!custNameFull, // v1.0.56: kalau diisi manual dari awal, kunci — jangan ditimpa auto-fill invoice
   };
   try {
@@ -5640,6 +5935,9 @@ function ilOpenDetail(id, editMode) {
     <label class="cost-modal-label">Asal Lead</label>
     ${ilSourceSelectHtml('ilDetSource', e.source || '')}
     <div style="height:10px;"></div>
+    <label class="cost-modal-label">Ukuran yang Disebut (dari pesan WA website)</label>
+    ${ilSizeHintSelectHtml('ilDetSizeHint', e.product, e.size_hint || '')}
+    <div style="height:10px;"></div>
     <label class="cost-modal-label">Catatan</label>
     <textarea class="input" id="ilDetNote" rows="2" placeholder="Contoh: proyek ruko 2 lantai">${h(e.note || '')}</textarea>
     <div class="il-locked-hint">Tanggal catatan (${h(dateOnly)}) tidak ditampilkan di sini & tidak bisa diubah — biar nggak ada yang kegeser nggak sengaja.</div>
@@ -5657,6 +5955,11 @@ function ilOpenDetail(id, editMode) {
     <div class="il-detail-row">
       <span class="il-detail-lbl">Asal Lead</span>
       <span class="il-detail-val">${h(ilSourceLabel(e.source) || e.source)}</span>
+    </div>` : ''}
+    ${e.size_hint ? `
+    <div class="il-detail-row">
+      <span class="il-detail-lbl">Ukuran Disebut</span>
+      <span class="il-detail-val">${h(e.size_hint)}</span>
     </div>` : ''}
     ${e.note ? `<div style="font-size:12.5px;color:#64748b;line-height:1.6;margin-top:8px;">${h(e.note)}</div>` : ''}
   `;
@@ -5912,6 +6215,7 @@ async function ilSaveDetailAndClose(id, editMode) {
     patch.customer_phone = phone ? normalizePhone(phone) : '';
     patch.note = (document.getElementById('ilDetNote') || {}).value?.trim() || '';
     patch.source = (document.getElementById('ilDetSource') || {}).value || null;  // v1.0.66
+    patch.size_hint = (document.getElementById('ilDetSizeHint') || {}).value || null;  // v1.0.70
     // v1.0.57: kunci nama hanya kalau namanya memang diisi. Kalau dikosongkan,
     // biarkan tetap bisa terisi otomatis dari invoice nanti.
     patch.name_locked = !!name;
@@ -6742,10 +7046,14 @@ async function ilSaveFactoryPrice() {
 //   (A) city_pricing  — harga yang boleh dilihat publik di halaman /kota/<slug>.
 //       BEDA dari factory_price_log (harga modal dari pabrik, belum ongkir) dan
 //       beda dari harga per transaksi di inquiry_log.
-//   (B) testimonials  — testimoni pelanggan yang nantinya DITANAM MANUAL ke file
-//       HTML website (bukan dibaca live dari database), supaya Google bisa
-//       membacanya dan halaman tetap cepat. Jadi is_published di sini artinya
-//       "sudah terpasang di web", bukan tombol publish.
+//   (B) testimonials  — ulasan pelanggan. v1.0.70: website MEMBACA TABEL INI
+//       LANGSUNG (real-time), tidak lagi ditanam manual ke file HTML. Section
+//       "Kata pembeli kami" dibangun dari baris yang is_published = true DAN
+//       consent_name = true, diurutkan created_at menurun; yang terbaru jadi
+//       kartu besar. Kalau belum ada satu pun yang lolos, section-nya (plus
+//       link "Ulasan" di navbar & footer) tersembunyi total.
+//       Jadi is_published di sini benar-benar tombol terbit — satu klik salah
+//       langsung terlihat publik.
 // ════════════════════════════════════════════════════════════════
 
 const CP_OWNER = 'proconlite';
@@ -6804,6 +7112,7 @@ async function cpLoadAll() {
     cpLoaded = true;
     cpRenderList();
     tmRenderList();
+    cpFixUnits();          // v1.0.70 (Tugas D)
   } catch (e) { console.error('cpLoadAll:', e); }
 }
 
@@ -6826,6 +7135,57 @@ function cpSlugify(s) {
 function cpSlugClean(s) { return cpSlugify(s).replace(/^-+|-+$/g, ''); }
 function cpUnitLabel(u) { return u === 'm3' ? 'm³' : (u === 'm2' ? 'm²' : (u || '')); }
 function cpProdLabel(p) { return p === 'panel' ? 'Panel Lantai' : 'Bata Ringan'; }
+
+// ── v1.0.70 (Tugas D): satuan ditentukan produknya, bukan diketik ──
+// Website menerjemahkan unit jadi simbol (m3 → m³, m2 → m²). Kalau kolomnya
+// kosong atau salah isi, di website muncul "/undefined". Jadi nilainya
+// sekarang selalu dihitung dari produk dan tidak pernah bisa diedit.
+function cpUnitFor(product) { return product === 'panel' ? 'm2' : 'm3'; }
+function cpUnitSymbol(product) { return cpUnitLabel(cpUnitFor(product)); }
+
+// ── v1.0.70 (Tugas C): angka "±" yang benar-benar muncul di website ──
+// Website TIDAK menampilkan rentang di kartu produk. Untuk tiap baris
+// terpublikasi dia mengambil titik tengah min–maks, merata-ratakan semua
+// baris yang relevan, lalu membulatkannya ke kelipatan 10.000.
+//   · halaman /kota/<slug> → hanya baris kabupaten itu
+//   · beranda              → rata-rata SELURUH kabupaten yang dipublikasikan
+function cpMidpoint(min, max) {
+  const a = (min == null || min === '') ? null : Number(min);
+  const b = (max == null || max === '') ? null : Number(max);
+  const va = (a && a > 0) ? a : null;
+  const vb = (b && b > 0) ? b : null;
+  if (va == null && vb == null) return null;
+  if (va == null) return vb;
+  if (vb == null) return va;
+  return (va + vb) / 2;
+}
+function cpRound10k(n) { return n == null ? null : Math.round(n / 10000) * 10000; }
+function cpApproxOf(rows) {
+  const mids = (rows || []).map(r => cpMidpoint(r.price_min, r.price_max)).filter(v => v != null);
+  if (!mids.length) return null;
+  return cpRound10k(mids.reduce((s, v) => s + v, 0) / mids.length);
+}
+function cpApproxText(v, product) {
+  return v == null ? '—' : `± Rp ${fmtRupiah(v)} /${cpUnitSymbol(product)}`;
+}
+function cpRangeText(min, max, product) {
+  const a = (min && Number(min) > 0) ? Number(min) : null;
+  const b = (max && Number(max) > 0) ? Number(max) : null;
+  const u = cpUnitSymbol(product);
+  if (a == null && b == null) return '—';
+  if (a != null && b != null && a !== b) return `Rp ${fmtRupiah(a)} – ${fmtRupiah(b)} /${u}`;
+  return `Rp ${fmtRupiah(a != null ? a : b)} /${u}`;
+}
+// Rata-rata beranda per produk, memakai seluruh baris yang dipublikasikan.
+// Bisa dititipi satu baris "seandainya" (draft) supaya modal bisa menunjukkan
+// pergeseran angka beranda sebelum disimpan.
+function cpHomeApprox(product, draft) {
+  const rows = cpStore
+    .filter(r => r.product === product)
+    .map(r => (draft && draft.id === r.id) ? draft : r)
+    .filter(r => r.is_published && cpMidpoint(r.price_min, r.price_max) != null);
+  return { value: cpApproxOf(rows), count: rows.length };
+}
 function cpDateLabel(d) {
   if (!d) return '';
   try { return new Date(d + 'T00:00:00').toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' }); }
@@ -6866,6 +7226,7 @@ function cpRefStats(kabupaten, product) {
 
 // ── Daftar harga publik ──────────────────────────────────────
 function cpRenderList() {
+  cpRenderHomeBanner();
   const box = document.getElementById('cpList');
   if (!box) return;
   if (!cpStore.length) {
@@ -6898,16 +7259,57 @@ function cpRenderList() {
               ? `Rp ${fmtRupiah(min)} – ${fmtRupiah(max)}`
               : `Rp ${fmtRupiah(min != null ? min : max)}`;
           }
+          const approx = cpApproxOf([r]);
           return `<div class="cp-row" onclick="cpOpenEdit(${r.id})">
             <div class="cp-row-main">
               <div class="cp-row-prod">${cpProdLabel(r.product)}</div>
-              <div class="cp-row-price${has ? '' : ' empty'}">${priceTxt}${has ? ` <span class="unit">/${cpUnitLabel(r.unit)}</span>` : ''}</div>
+              <div class="cp-row-price${has ? '' : ' empty'}">${priceTxt}${has ? ` <span class="unit">/${cpUnitSymbol(r.product)}</span>` : ''}</div>
+              ${approx != null ? `<div class="cp-row-approx">di kartu produk: <b>± Rp ${fmtRupiah(approx)}</b></div>` : ''}
             </div>
-            <span class="cp-pub ${r.is_published ? 'on' : 'off'}">${r.is_published ? 'Tampil' : 'Disembunyikan'}</span>
+            <span class="cp-pub ${r.is_published ? 'on' : 'off'}">${r.is_published ? 'Tayang' : 'Belum tayang'}</span>
           </div>`;
         }).join('')}
       </div>`;
     }).join('');
+}
+
+// ── v1.0.70 (Tugas C): banner rata-rata beranda ──────────────
+// Menerbitkan harga SATU kabupaten ikut menggeser angka di beranda, karena
+// beranda merata-ratakan seluruh kabupaten yang dipublikasikan. Ini biar
+// pergeserannya kelihatan sebelum kaget.
+function cpRenderHomeBanner() {
+  const box = document.getElementById('cpHomeBanner');
+  if (!box) return;
+  const bata  = cpHomeApprox('bata');
+  const panel = cpHomeApprox('panel');
+  const line = (label, res, product) => `
+    <div class="row">
+      <span class="k">${label}</span>
+      <span class="v${res.value != null ? ' key' : ''}">${res.value != null ? '± Rp ' + fmtRupiah(res.value) : '—'}<span class="u">${res.value != null ? '/' + cpUnitSymbol(product) : ''}</span></span>
+      <span class="n">${res.count ? `dari ${res.count} kabupaten` : 'belum ada yang tayang'}</span>
+    </div>`;
+  box.innerHTML = `<div class="brw-plate brw-home-banner">
+    <div class="lbl">Yang muncul di beranda website</div>
+    ${line('Bata', bata, 'bata')}
+    ${line('Panel', panel, 'panel')}
+    <div class="sub">Beranda menampilkan rata-rata seluruh kabupaten yang dipublikasikan.
+    Kalau belum ada satu pun yang tayang, kartu produk berbunyi "Dihitung per proyek".</div>
+  </div>`;
+}
+
+// ── v1.0.70 (Tugas D): rapikan baris lama yang unit-nya kosong/salah ──
+async function cpFixUnits() {
+  const bad = cpStore.filter(r => r.unit !== cpUnitFor(r.product));
+  if (!bad.length) return;
+  for (const r of bad) {
+    const unit = cpUnitFor(r.product);
+    try {
+      const { error } = await _sb.from('city_pricing').update({ unit }).eq('id', r.id);
+      if (error) { console.error('cpFixUnits:', error); continue; }
+      r.unit = unit;
+    } catch (e) { console.error('cpFixUnits:', e); }
+  }
+  cpRenderList();
 }
 
 // ── Form isi harga publik ────────────────────────────────────
@@ -6939,7 +7341,8 @@ function cpOpenEdit(id) {
   const r = cpStore.find(x => x.id === id);
   if (!r) return;
   const st = cpRefStats(r.kabupaten, r.product);
-  const u = cpUnitLabel(r.unit);
+  const u = cpUnitSymbol(r.product);   // v1.0.70: satuan ikut produk, tidak bisa diedit
+  cpEditId = id;
   // Patokan peringatan: modal riil kalau ada (sudah termasuk ongkir),
   // kalau belum ada transaksi jatuh ke harga pabrik.
   cpWarnFloor = st.modalAvg || st.factory || null;
@@ -6973,7 +7376,7 @@ function cpOpenEdit(id) {
       <span class="rp">Rp</span>
       <input id="cpMin" inputmode="numeric" placeholder="0"
              value="${r.price_min != null ? fmtRupiah(Number(r.price_min)) : ''}"
-             oninput="cpFmtInput(this); cpCheckWarn()">
+             oninput="cpFmtInput(this); cpCheckWarn(); cpUpdatePreview()">
       <span class="suffix">/${u}</span>
     </div>
 
@@ -6983,21 +7386,23 @@ function cpOpenEdit(id) {
       <span class="rp">Rp</span>
       <input id="cpMax" inputmode="numeric" placeholder="0"
              value="${r.price_max != null ? fmtRupiah(Number(r.price_max)) : ''}"
-             oninput="cpFmtInput(this); cpCheckWarn()">
+             oninput="cpFmtInput(this); cpCheckWarn(); cpUpdatePreview()">
       <span class="suffix">/${u}</span>
     </div>
 
     <div class="cp-warn" id="cpWarn"></div>
+
+    <div id="cpPreview" class="brw"></div>
 
     <div style="height:12px;"></div>
     <label class="cost-modal-label">Catatan (opsional)</label>
     <input class="input" id="cpNote" value="${h(r.note || '')}" placeholder="Contoh: belum termasuk langsir">
 
     <label class="cp-checkline">
-      <input type="checkbox" id="cpPub" ${r.is_published ? 'checked' : ''}>
+      <input type="checkbox" id="cpPub" ${r.is_published ? 'checked' : ''} onchange="cpUpdatePreview()">
       <span>
-        <span class="t">Tampilkan harga ini di website</span>
-        <span class="s">Kalau dicentang, harga min &amp; maks wajib terisi.</span>
+        <span class="t">Tayangkan harga ini di website</span>
+        <span class="s">Begitu disimpan, angkanya langsung dipakai website. Harga min &amp; maks wajib terisi.</span>
       </span>
     </label>
 
@@ -7007,6 +7412,45 @@ function cpOpenEdit(id) {
     </div>
   `);
   cpCheckWarn();
+  cpUpdatePreview();
+}
+
+// ── v1.0.70 (Tugas C): pratinjau angka yang muncul di website ──
+let cpEditId = null;
+
+function cpUpdatePreview() {
+  const box = document.getElementById('cpPreview');
+  if (!box || cpEditId == null) return;
+  const r = cpStore.find(x => x.id === cpEditId);
+  if (!r) return;
+
+  const min = ilRpVal('cpMin');
+  const max = ilRpVal('cpMax');
+  const pub = !!(document.getElementById('cpPub') || {}).checked;
+  const draft = { id: r.id, product: r.product, is_published: pub, price_min: min || null, price_max: max || null };
+
+  const kartu = cpApproxOf([draft]);
+  const home  = cpHomeApprox(r.product, draft);
+  const u = cpUnitSymbol(r.product);
+
+  const belum = kartu == null;
+  box.innerHTML = `<div class="brw-approx">
+    <div class="brw-approx-head">Yang benar-benar muncul di website</div>
+    <div class="brw-approx-row">
+      <span class="where">Kartu produk <b>/kota/${h(r.slug)}</b></span>
+      <span class="num ${belum ? 'off' : 'key'}">${belum ? 'Dihitung per proyek' : `± Rp ${fmtRupiah(kartu)} /${u}`}</span>
+    </div>
+    <div class="brw-approx-row">
+      <span class="where">Kartu <b>"Kisaran harga per kabupaten"</b> di beranda &amp; kalimat harga di FAQ</span>
+      <span class="num ${belum ? 'off' : ''}">${belum ? '—' : cpRangeText(min, max, r.product)}</span>
+    </div>
+    <div class="brw-approx-row">
+      <span class="where">Kartu produk di <b>beranda</b> (rata-rata semua kabupaten)</span>
+      <span class="num ${home.value == null ? 'off' : ''}">${home.value == null ? 'Dihitung per proyek' : `± Rp ${fmtRupiah(home.value)} /${u}`}</span>
+    </div>
+    ${!pub ? `<div class="brw-approx-note">Belum dicentang tayang — selama itu website menampilkan
+      <b>"Dihitung per proyek"</b> dan mengajak kirim volume lewat WhatsApp. Angka di atas cuma bayangan.</div>` : ''}
+  </div>`;
 }
 
 async function cpSave(id) {
@@ -7025,6 +7469,7 @@ async function cpSave(id) {
     price_max: max || null,
     note,
     is_published: pub,
+    unit: cpUnitFor(r.product),   // v1.0.70 (Tugas D): selalu ikut produk
     updated_at: new Date().toISOString(),
     updated_by: currentUser ? currentUser.id : null,
   };
@@ -7033,8 +7478,9 @@ async function cpSave(id) {
     if (error) { console.error(error); toast('Gagal menyimpan', 'error'); return; }
     Object.assign(r, data);
     costCloseModal();
+    cpEditId = null;
     cpRenderList();
-    toast('✓ Harga publik tersimpan');
+    toast(pub ? '✓ Tersimpan — sudah tayang di website' : '✓ Tersimpan — belum tayang');
   } catch (e) { console.error(e); toast('Gagal menyimpan', 'error'); }
 }
 
@@ -7079,8 +7525,8 @@ async function cpSaveNewKab() {
   if (cpStore.some(r => r.slug === slug)) { toast('Slug itu sudah dipakai', 'error'); return; }
   const uid = currentUser ? currentUser.id : null;
   const rows = [
-    { kabupaten: kab, slug, product: 'bata',  unit: 'm3', is_published: false, updated_by: uid },
-    { kabupaten: kab, slug, product: 'panel', unit: 'm2', is_published: false, updated_by: uid },
+    { kabupaten: kab, slug, product: 'bata',  unit: cpUnitFor('bata'),  is_published: false, updated_by: uid },
+    { kabupaten: kab, slug, product: 'panel', unit: cpUnitFor('panel'), is_published: false, updated_by: uid },
   ];
   try {
     const { data, error } = await _sb.from('city_pricing').insert(rows).select();
@@ -7108,6 +7554,153 @@ async function cpDeleteKab(rowId) {
     cpRenderList();
     toast('✓ Dihapus');
   } catch (e) { console.error(e); toast('Gagal menghapus', 'error'); }
+}
+
+// ════════════════════════════════════════════════════════════════
+//  v1.0.70 — KALKULATOR UKURAN (Tugas E)
+//
+//  Rumus & daftar pilihannya SAMA PERSIS dengan mode "Ukuran & spek"
+//  di kartu produk bata-ringan-bricon.com. Kalau salah satu diubah,
+//  yang satunya harus ikut diubah — kalau tidak, angka di penawaran
+//  beda dengan angka yang dilihat calon pembeli di website.
+//
+//  Sengaja TIDAK ada berat per pcs / per panel: angka berat jenis
+//  resmi dari pabrik belum ada, dan website pun tidak menampilkannya.
+//  Jangan mengarang. Kalau data resminya sudah dapat, kolom
+//  "Isi/1 truk" bisa diganti "Berat/pcs" di dua tempat sekaligus.
+// ════════════════════════════════════════════════════════════════
+
+const BRW_BATA_MM   = [75, 100, 125];                 // tebal, mm (600 × 200 mm)
+const BRW_PANEL_MM  = [1470, 2000, 2500, 3220];       // bentang, mm (lebar 600, tebal 125)
+const BRW_TRUK_M3   = 11.52;                          // 1 truk = 11,52 m³
+
+function brwNum(v, dec) {
+  return Number(v).toLocaleString('id-ID', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+}
+
+function brwBataCalc(mm) {
+  const vol = 0.6 * 0.2 * (mm / 1000);
+  return {
+    mm,
+    cm: mm / 10,
+    volume: vol,                                  // m³ per pcs
+    perM3: Math.round(1 / vol),                   // pcs per m³
+    perTruk: Math.round(BRW_TRUK_M3 / vol),       // pcs per truk
+    dinding: 1 / (mm / 1000),                     // m² dinding per m³
+  };
+}
+
+function brwPanelCalc(mm) {
+  const luas = (mm / 1000) * 0.6;                 // m² per panel
+  return {
+    mm,
+    m: mm / 1000,
+    luas,
+    per10: Math.ceil(10 / luas),
+    per100: Math.ceil(100 / luas),
+  };
+}
+
+let brwCalcProduct = 'bata';
+let brwCalcPick = { bata: 100, panel: 2000 };
+
+function brwCalcSetProduct(p) {
+  brwCalcProduct = (p === 'panel') ? 'panel' : 'bata';
+  document.querySelectorAll('#brwCalcSeg button').forEach(b => {
+    b.classList.toggle('active', b.dataset.p === brwCalcProduct);
+  });
+  brwCalcRender();
+}
+
+function brwCalcSetSize(mm) {
+  brwCalcPick[brwCalcProduct] = mm;
+  brwCalcRender();
+}
+
+function brwCalcRender() {
+  const pills = document.getElementById('brwCalcPills');
+  const plate = document.getElementById('brwCalcPlate');
+  const extra = document.getElementById('brwCalcExtra');
+  if (!pills || !plate || !extra) return;
+
+  const isBata = brwCalcProduct === 'bata';
+  const list = isBata ? BRW_BATA_MM : BRW_PANEL_MM;
+  const cur = brwCalcPick[brwCalcProduct];
+
+  pills.innerHTML = list.map(mm => {
+    const big = isBata ? `${brwNum(mm / 10, mm % 10 === 0 ? 0 : 1)} cm` : `${brwNum(mm / 1000, 2)} m`;
+    return `<button type="button" class="brw-pill${mm === cur ? ' on' : ''}" onclick="brwCalcSetSize(${mm})">
+      <span class="a">${big}</span><span class="b">${mm} mm</span>
+    </button>`;
+  }).join('');
+
+  if (isBata) {
+    const c = brwBataCalc(cur);
+    plate.innerHTML = `<div class="brw-plate">
+      <div class="lbl">Dimensi per pcs</div>
+      <div class="big">600 × 200 × ${brwNum(c.mm, 0)}<span class="u">mm</span></div>
+      <div class="brw-plate-grid">
+        <div class="cell"><div class="lbl">Isi / m³</div><div class="num key">${brwNum(c.perM3, 0)}<span class="u">pcs</span></div></div>
+        <div class="cell"><div class="lbl">Isi / 1 truk</div><div class="num">${brwNum(c.perTruk, 0)}<span class="u">pcs</span></div></div>
+        <div class="cell"><div class="lbl">Dinding / m³</div><div class="num">${brwNum(c.dinding, 1)}<span class="u">m²</span></div></div>
+      </div>
+      <div class="sub">Volume 1 pcs = ${brwNum(c.volume, 4)} m³ · 1 truk = ${brwNum(BRW_TRUK_M3, 2)} m³</div>
+    </div>`;
+    extra.innerHTML = `
+      <table class="brw-calc-table">
+        <thead><tr><th>Tebal</th><th>Isi/m³</th><th>Isi/1 truk</th><th>Dinding/m³</th></tr></thead>
+        <tbody>${BRW_BATA_MM.map(mm => {
+          const r = brwBataCalc(mm);
+          return `<tr class="${mm === cur ? 'on' : ''}">
+            <td>${brwNum(r.cm, mm % 10 === 0 ? 0 : 1)} cm</td>
+            <td>${brwNum(r.perM3, 0)} pcs</td>
+            <td>${brwNum(r.perTruk, 0)} pcs</td>
+            <td>${brwNum(r.dinding, 1)} m²</td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table>
+      <div class="brw-calc-note">
+        Berat per pcs sengaja tidak ditampilkan — angka berat jenis resmi dari pabrik belum ada,
+        dan website juga tidak menampilkannya. Kalau nanti dapat datanya dari BRICON, kolom
+        "Isi/1 truk" bisa diganti "Berat/pcs" di dashboard dan website sekaligus.
+      </div>`;
+  } else {
+    const c = brwPanelCalc(cur);
+    plate.innerHTML = `<div class="brw-plate">
+      <div class="lbl">Dimensi per panel</div>
+      <div class="big">${c.mm} × 600 × 125<span class="u">mm</span></div>
+      <div class="brw-plate-grid">
+        <div class="cell"><div class="lbl">Luas / panel</div><div class="num key">${brwNum(c.luas, 2)}<span class="u">m²</span></div></div>
+        <div class="cell"><div class="lbl">Per 10 m²</div><div class="num">${brwNum(c.per10, 0)}<span class="u">pnl</span></div></div>
+        <div class="cell"><div class="lbl">Per 100 m²</div><div class="num">${brwNum(c.per100, 0)}<span class="u">pnl</span></div></div>
+      </div>
+      <div class="sub">Bentang ${brwNum(c.m, 2)} m · lebar 0,60 m · tebal 125 mm</div>
+    </div>`;
+    extra.innerHTML = `
+      <table class="brw-calc-table">
+        <thead><tr><th>Bentang</th><th>Luas/panel</th><th>Per 10 m²</th><th>Per 100 m²</th></tr></thead>
+        <tbody>${BRW_PANEL_MM.map(mm => {
+          const r = brwPanelCalc(mm);
+          return `<tr class="${mm === cur ? 'on' : ''}">
+            <td>${brwNum(r.m, 2)} m</td>
+            <td>${brwNum(r.luas, 2)} m²</td>
+            <td>${brwNum(r.per10, 0)} panel</td>
+            <td>${brwNum(r.per100, 0)} panel</td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table>
+      <div class="brw-calc-note">
+        Jumlah panel dibulatkan <b>ke atas</b> — sisa potongan tetap dihitung satu panel utuh,
+        sama seperti perhitungan di website.
+      </div>`;
+  }
+}
+
+// Label ukuran yang dipakai pesan WhatsApp dari website (Tugas G).
+function brwSizeHintOptions(product) {
+  return (product === 'panel')
+    ? BRW_PANEL_MM.map(mm => `bentang ${brwNum(mm / 1000, 2)} m`)
+    : BRW_BATA_MM.map(mm => `tebal ${brwNum(mm / 10, mm % 10 === 0 ? 0 : 1)} cm`);
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -7150,34 +7743,87 @@ function tmStars(n) {
   }).join('');
 }
 
+// ── v1.0.70 (Tugas B): pratinjau kartu seperti di website ────
+// Aturannya disalin persis dari website supaya tidak ada kejutan:
+// inisial = huruf pertama kata pertama + huruf pertama kata terakhir.
+function tmInitials(name) {
+  const w = (name || '').trim().split(/\s+/).filter(Boolean);
+  if (!w.length) return '?';
+  if (w.length === 1) return w[0][0].toUpperCase();
+  return (w[0][0] + w[w.length - 1][0]).toUpperCase();
+}
+
+// Baris mana yang jadi kartu besar gelap di website: yang paling baru
+// di antara yang lolos syarat (is_published = true AND consent_name = true).
+function tmFeaturedId() {
+  const live = tmStore.filter(t => t.is_published && t.consent_name);
+  if (!live.length) return null;
+  return live.slice().sort((a, b) => new Date(b.created_at) - new Date(a.created_at))[0].id;
+}
+
+function tmPreviewHtml(t, featured) {
+  const kab = (t.kabupaten || '').toUpperCase();
+  const prod = cpProdLabel(t.product || 'bata').toUpperCase();
+  return `<div class="tm-prev${featured ? ' featured' : ''}">
+    <div class="tm-prev-tag">${featured ? '★ kartu besar — paling depan di website' : 'kartu ringkas'}</div>
+    <div class="tm-prev-top">
+      <div class="tm-prev-av">${h(tmInitials(t.display_name))}</div>
+      <div class="tm-prev-id">
+        <div class="tm-prev-name">${h(t.display_name || '—')}</div>
+        <div class="tm-prev-meta">${h(kab || '—')} · ${h(prod)}</div>
+      </div>
+    </div>
+    <div class="tm-prev-stars"><span class="tm-stars">${tmStars(t.rating)}</span></div>
+    <div class="tm-prev-quote">“${h(t.quote || '')}”</div>
+  </div>`;
+}
+
 function tmRenderList() {
   const box = document.getElementById('tmList');
   if (!box) return;
   if (!tmStore.length) {
-    box.innerHTML = `<div class="plog-empty">Belum ada testimoni.<br>Minta ke pelanggan yang sudah closing lewat WhatsApp, lalu salin balasannya ke sini.</div>`;
+    box.innerHTML = `<div class="plog-empty">Belum ada ulasan.<br>Minta ke pelanggan yang sudah closing lewat WhatsApp, lalu salin balasannya ke sini.<br><br>Selama belum ada satu pun yang tayang, section "Kata pembeli kami" di website <b>tersembunyi total</b> — begitu juga link Ulasan di navbar &amp; footer.</div>`;
     return;
   }
-  box.innerHTML = tmStore.map(t => `
+  const featId = tmFeaturedId();
+  box.innerHTML = tmStore.map(t => {
+    const live = !!t.is_published;
+    const locked = !t.consent_name;
+    return `
     <div class="tm-item">
       <div class="tm-item-top">
         <span class="tm-item-name">${h(t.display_name || '—')}</span>
         <span class="tm-stars">${tmStars(t.rating)}</span>
         <span class="tm-score">${tmRatingText(t.rating)}<span class="word">${tmRatingWord(t.rating)}</span></span>
-        <span class="tm-badge ${t.is_published ? 'web-yes' : 'web-no'}">${t.is_published ? 'Sudah di web' : 'Belum di web'}</span>
-        ${t.consent_name ? '' : '<span class="tm-badge noconsent">Belum ada izin nama</span>'}
+        <span class="tm-badge ${live ? 'live' : 'notlive'}">${live ? 'Tayang di website' : 'Belum tayang'}</span>
+        ${t.id === featId ? '<span class="tm-featured-flag">kartu besar</span>' : ''}
       </div>
-      <div class="tm-item-sub">${cpProdLabel(t.product || 'bata')}${t.kabupaten ? ' · ' + h(t.kabupaten) : ''}</div>
-      <div class="tm-item-quote">${h(t.quote || '').replace(/\n/g, '<br>')}</div>
+      <div class="tm-item-sub">${cpProdLabel(t.product || 'bata')}${t.kabupaten ? ' · ' + h(t.kabupaten) : ''} · ${(t.quote || '').length} karakter</div>
+      ${tmPreviewHtml(t, t.id === featId)}
+      ${locked ? `<div class="tm-lock-note">Belum ada izin nama dari pelanggan — ulasan ini tidak bisa ditayangkan. Website memang hanya membaca baris yang izin namanya sudah tercatat.</div>` : ''}
       <div class="tm-actions">
-        <button class="tm-act${t.is_published ? '' : ' go'}" onclick="tmTogglePublished(${t.id})">${t.is_published ? 'Tandai belum di web' : 'Tandai sudah di web'}</button>
+        <button class="tm-act${live ? '' : ' go'}"${locked ? ' disabled title="Belum ada izin nama dari pelanggan"' : ` onclick="tmTogglePublished(${t.id})"`}>${live ? 'Sembunyikan dari website' : 'Tampilkan di website'}</button>
+        ${locked ? `<button class="tm-act consent" onclick="tmGrantConsent(${t.id})">Catat izin nama</button>` : ''}
+        <button class="tm-act" onclick="tmOpenEdit(${t.id})">Ubah</button>
         <button class="tm-act danger" onclick="tmRemove(${t.id})">Hapus</button>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
-function tmOpenAdd() {
-  tmRating = 5;
-  tmPickedInquiry = null;
+// v1.0.70: satu modal dipakai untuk tambah & ubah. `editId` null = tambah.
+let tmEditId = null;
+
+function tmOpenAdd() { tmOpenForm(null); }
+function tmOpenEdit(id) { tmOpenForm(id); }
+
+function tmOpenForm(editId) {
+  const t = editId ? tmStore.find(x => x.id === editId) : null;
+  if (editId && !t) return;
+  tmEditId = editId || null;
+  tmRating = t ? tmClampRating(t.rating) : 5;
+  tmPickedInquiry = t ? (t.inquiry_id || null) : null;
+
   // Dropdown pelanggan diambil dari catatan Tanya Harga yang sudah Closing —
   // supaya tidak salah orang. Tetap boleh diisi manual tanpa memilih.
   const closings = ilStore
@@ -7192,36 +7838,42 @@ function tmOpenAdd() {
   }).join('');
 
   costModal(`
-    <div class="cost-modal-title">Tambah Testimoni</div>
+    <div class="cost-modal-title">${t ? 'Ubah Ulasan' : 'Tambah Ulasan'}</div>
     <div class="cost-modal-sub">Salin balasan WhatsApp pelanggan. Tanda bacanya boleh dirapikan — jangan diubah maksudnya.</div>
 
+    ${t ? '' : `
     <label class="cost-modal-label">Pilih Pelanggan yang Sudah Closing</label>
     <select class="input" id="tmInquiry" onchange="tmPickInquiry(this.value)">
       <option value="">— isi manual saja —</option>
       ${opts}
     </select>
     ${closings.length ? '' : '<div style="font-size:10.5px;color:#94a3b8;margin-top:5px;">Belum ada catatan berstatus Closing — isi manual dulu.</div>'}
+    <div style="height:12px;"></div>`}
 
-    <div style="height:12px;"></div>
     <label class="cost-modal-label">Nama yang Tampil di Website</label>
-    <input class="input" id="tmName" placeholder="Contoh: Pak R. — Sidoarjo">
+    <input class="input" id="tmName" placeholder="Contoh: Hendra Rusdianto" value="${t ? h(t.display_name || '') : ''}" oninput="tmFormPreview()">
     <div style="font-size:10.5px;color:#94a3b8;margin-top:5px;line-height:1.5;">
       Boleh disamarkan kalau pelanggan tidak mau nama penuhnya muncul.
+      Website memakai inisialnya sebagai avatar bulat.
     </div>
 
     <div style="height:12px;"></div>
     <div class="il-region-row">
       <div class="il-region-col">
-        <label class="cost-modal-label">Kabupaten</label>
-        <input class="input" id="tmKab" placeholder="Sidoarjo">
+        <label class="cost-modal-label">Lokasi</label>
+        <input class="input" id="tmKab" placeholder="Gresik — Manyar" value="${t ? h(t.kabupaten || '') : ''}" oninput="tmFormPreview()">
       </div>
       <div class="il-region-col">
         <label class="cost-modal-label">Produk</label>
-        <select class="input" id="tmProduct">
-          <option value="bata">Bata Ringan</option>
-          <option value="panel">Panel Lantai</option>
+        <select class="input" id="tmProduct" onchange="tmFormPreview()">
+          <option value="bata"${t && t.product === 'panel' ? '' : ' selected'}>Bata Ringan</option>
+          <option value="panel"${t && t.product === 'panel' ? ' selected' : ''}>Panel Lantai</option>
         </select>
       </div>
+    </div>
+    <div style="font-size:10.5px;color:#94a3b8;margin-top:5px;line-height:1.5;">
+      Format yang dipakai desain website: <b>kota/kabupaten — kecamatan</b>, mis. "Sidoarjo — Waru".
+      Di website ditulis huruf besar semua.
     </div>
 
     <div style="height:12px;"></div>
@@ -7238,17 +7890,23 @@ function tmOpenAdd() {
     </div>
     <div style="font-size:10.5px;color:#94a3b8;margin-top:6px;line-height:1.5;">
       Ketuk sisi kiri bintang untuk setengah, sisi kanan untuk penuh.
+      Website mendukung setengah bintang.
     </div>
 
     <div style="height:12px;"></div>
-    <label class="cost-modal-label">Isi Testimoni</label>
-    <textarea class="input" id="tmQuote" rows="4" placeholder="Contoh: Barang sampai tepat waktu, kualitasnya bagus, respon cepat."></textarea>
+    <label class="cost-modal-label">Isi Ulasan</label>
+    <textarea class="input" id="tmQuote" rows="4" placeholder="Contoh: Barang sampai tepat waktu, kualitasnya bagus, respon cepat." oninput="tmFormPreview()">${t ? h(t.quote || '') : ''}</textarea>
+    <div class="tm-count" id="tmCount"></div>
+
+    <div style="height:6px;"></div>
+    <label class="cost-modal-label">Pratinjau di Website</label>
+    <div id="tmPrevBox" class="brw"></div>
 
     <label class="cp-checkline">
-      <input type="checkbox" id="tmConsent">
+      <input type="checkbox" id="tmConsent" ${t && t.consent_name ? 'checked' : ''}>
       <span>
         <span class="t">Pelanggan sudah mengizinkan namanya ditampilkan di website</span>
-        <span class="s">Kalau belum, testimoninya tetap tersimpan tapi diberi tanda supaya tidak sengaja terpasang.</span>
+        <span class="s">Tanpa ini ulasannya tetap tersimpan, tapi <b>tidak bisa ditayangkan</b> — website memang hanya membaca baris yang izin namanya sudah tercatat.</span>
       </span>
     </label>
 
@@ -7258,6 +7916,40 @@ function tmOpenAdd() {
     </div>
   `);
   tmSetRating(tmRating);   // v1.0.67: nyalakan bintang & tulis istilahnya
+  tmFormPreview();
+}
+
+// Patokan panjang kutipan — saran, bukan larangan. Kartu ringkas paling rapi
+// di 80–160 karakter; kartu besar (yang terbaru) masih muat sampai ~220.
+function tmFormPreview() {
+  const name  = (document.getElementById('tmName')    || {}).value || '';
+  const kab   = (document.getElementById('tmKab')     || {}).value || '';
+  const quote = (document.getElementById('tmQuote')   || {}).value || '';
+  const prod  = (document.getElementById('tmProduct') || {}).value || 'bata';
+
+  const cnt = document.getElementById('tmCount');
+  if (cnt) {
+    const n = quote.length;
+    let cls = '', msg;
+    if (n === 0)        { msg = 'belum diisi'; }
+    else if (n < 80)    { cls = 'warn'; msg = `${n} karakter — agak pendek, kartunya jadi kosong`; }
+    else if (n <= 160)  { cls = 'good'; msg = `${n} karakter — pas untuk kartu ringkas`; }
+    else if (n <= 220)  { cls = 'good'; msg = `${n} karakter — masih muat di kartu besar`; }
+    else                { cls = 'warn'; msg = `${n} karakter — kartunya jadi tinggi sendiri & merusak barisan`; }
+    cnt.className = 'tm-count ' + cls;
+    cnt.textContent = msg;
+  }
+
+  const box = document.getElementById('tmPrevBox');
+  if (box) {
+    box.innerHTML = tmPreviewHtml({
+      display_name: name || 'Nama Pelanggan',
+      kabupaten: kab,
+      product: prod,
+      rating: tmRating,
+      quote: quote || 'Isi ulasannya akan tampil di sini.',
+    }, false);
+  }
 }
 
 function tmPickInquiry(idStr) {
@@ -7270,8 +7962,14 @@ function tmPickInquiry(idStr) {
   const kb = document.getElementById('tmKab');
   const pr = document.getElementById('tmProduct');
   if (nm) nm.value = e.customer_name || '';
-  if (kb) kb.value = cpBareName(e.kabupaten || '');
+  // Format lokasi website: "Kabupaten — Kecamatan".
+  if (kb) {
+    const kab = cpBareName(e.kabupaten || '');
+    const kec = (e.kecamatan || '').trim();
+    kb.value = kab && kec ? `${kab} — ${kec}` : (kab || kec);
+  }
   if (pr && (e.product === 'bata' || e.product === 'panel')) pr.value = e.product;
+  tmFormPreview();
 }
 
 function tmSetRating(n) {
@@ -7283,45 +7981,79 @@ function tmSetRating(n) {
   });
   const lbl = document.getElementById('tmRatingLabel');
   if (lbl) lbl.innerHTML = `<span class="num">${tmRatingText(tmRating)}</span>${tmRatingWord(tmRating)}`;
+  tmFormPreview();
 }
 
 async function tmSave() {
   const name    = (document.getElementById('tmName')    || {}).value?.trim() || '';
   const quote   = (document.getElementById('tmQuote')   || {}).value?.trim() || '';
-  const kab     = cpBareName((document.getElementById('tmKab') || {}).value || '');
+  const kab     = (document.getElementById('tmKab')     || {}).value?.trim() || '';
   const product = (document.getElementById('tmProduct') || {}).value || 'bata';
   const consent = !!(document.getElementById('tmConsent') || {}).checked;
   if (!name)  { toast('Nama yang tampil belum diisi', 'error'); return; }
-  if (!quote) { toast('Isi testimoni belum diisi', 'error'); return; }
-  const row = {
-    user_id: CP_OWNER,
-    inquiry_id: tmPickedInquiry,
-    display_name: name,
-    kabupaten: kab,
-    rating: tmRating,
-    quote,
-    product,
-    consent_name: consent,
-    is_published: false,
-  };
+  if (!quote) { toast('Isi ulasan belum diisi', 'error'); return; }
+
+  // Mengubah ulasan yang SEDANG TAYANG berarti mengubah isi website saat itu juga.
+  const cur = tmEditId ? tmStore.find(x => x.id === tmEditId) : null;
+  if (cur && cur.is_published) {
+    if (!confirm('Ulasan ini sedang tayang di bata-ringan-bricon.com.\nPerubahannya ikut terlihat di website dalam beberapa detik. Lanjut?')) return;
+  }
+  // Mencabut izin nama pada ulasan yang tayang = ulasannya hilang dari website.
+  if (cur && cur.is_published && cur.consent_name && !consent) {
+    if (!confirm('Izin nama dicabut. Ulasan ini akan otomatis HILANG dari website.\nLanjut?')) return;
+  }
+
   try {
-    const { data, error } = await _sb.from('testimonials').insert(row).select().single();
-    if (error) { console.error(error); toast('Gagal menyimpan testimoni', 'error'); return; }
-    tmStore.unshift(data);
+    if (tmEditId) {
+      const patch = {
+        display_name: name, kabupaten: kab, rating: tmRating, quote, product,
+        consent_name: consent,
+        is_published: consent ? cur.is_published : false,   // tanpa izin, tidak boleh tayang
+        updated_at: new Date().toISOString(),
+      };
+      const { data, error } = await _sb.from('testimonials').update(patch).eq('id', tmEditId).select().single();
+      if (error) { console.error(error); toast('Gagal menyimpan ulasan', 'error'); return; }
+      Object.assign(cur, data);
+    } else {
+      const row = {
+        user_id: CP_OWNER,
+        inquiry_id: tmPickedInquiry,
+        display_name: name,
+        kabupaten: kab,
+        rating: tmRating,
+        quote,
+        product,
+        consent_name: consent,
+        is_published: false,
+      };
+      const { data, error } = await _sb.from('testimonials').insert(row).select().single();
+      if (error) { console.error(error); toast('Gagal menyimpan ulasan', 'error'); return; }
+      tmStore.unshift(data);
+    }
+    tmEditId = null;
     costCloseModal();
     tmRenderList();
-    toast('✓ Testimoni tersimpan');
-  } catch (e) { console.error(e); toast('Gagal menyimpan testimoni', 'error'); }
+    costSyncSectionTabs();
+    toast('✓ Ulasan tersimpan');
+  } catch (e) { console.error(e); toast('Gagal menyimpan ulasan', 'error'); }
 }
 
-// is_published = "sudah terpasang di file HTML website", bukan tombol publish.
+// v1.0.70 (Tugas A): website membaca tabel ini LANGSUNG. Jadi tombol ini
+// benar-benar menerbitkan / menarik ulasan dari bata-ringan-bricon.com,
+// bukan sekadar penanda "sudah ditanam ke HTML" seperti dulu.
 async function tmTogglePublished(id) {
   const t = tmStore.find(x => x.id === id);
   if (!t) return;
   if (!t.is_published && !t.consent_name) {
-    if (!confirm('Pelanggan ini belum tercatat mengizinkan namanya ditampilkan.\nTetap tandai sudah terpasang di web?')) return;
+    toast('Belum ada izin nama dari pelanggan', 'error');
+    return;
   }
   const next = !t.is_published;
+  if (next) {
+    if (!confirm(`Ulasan dari ${t.display_name} akan langsung tampil di bata-ringan-bricon.com dalam beberapa detik.\nLanjut?`)) return;
+  } else {
+    if (!confirm(`Ulasan dari ${t.display_name} akan langsung hilang dari bata-ringan-bricon.com.\nLanjut?`)) return;
+  }
   try {
     const { data, error } = await _sb.from('testimonials')
       .update({ is_published: next, updated_at: new Date().toISOString() })
@@ -7329,20 +8061,40 @@ async function tmTogglePublished(id) {
     if (error) { console.error(error); toast('Gagal memperbarui', 'error'); return; }
     Object.assign(t, data);
     tmRenderList();
-    toast(next ? '✓ Ditandai sudah di web' : '✓ Ditandai belum di web');
+    costSyncSectionTabs();
+    toast(next ? '✓ Sudah tayang di website' : '✓ Sudah ditarik dari website');
+  } catch (e) { console.error(e); toast('Gagal memperbarui', 'error'); }
+}
+
+// Izin nama biasanya baru didapat belakangan lewat WhatsApp — jadi bisa
+// dicatat tanpa harus membuka form ubah.
+async function tmGrantConsent(id) {
+  const t = tmStore.find(x => x.id === id);
+  if (!t || t.consent_name) return;
+  if (!confirm(`Catat bahwa ${t.display_name} sudah mengizinkan namanya ditampilkan di website?\nUlasannya belum langsung tayang — masih perlu ditekan "Tampilkan di website".`)) return;
+  try {
+    const { data, error } = await _sb.from('testimonials')
+      .update({ consent_name: true, updated_at: new Date().toISOString() })
+      .eq('id', id).select().single();
+    if (error) { console.error(error); toast('Gagal memperbarui', 'error'); return; }
+    Object.assign(t, data);
+    tmRenderList();
+    toast('✓ Izin nama tercatat');
   } catch (e) { console.error(e); toast('Gagal memperbarui', 'error'); }
 }
 
 async function tmRemove(id) {
   const t = tmStore.find(x => x.id === id);
   if (!t) return;
-  if (!confirm(`Hapus testimoni dari ${t.display_name || 'pelanggan ini'}?`)) return;
+  const extra = t.is_published ? '\nUlasan ini sedang TAYANG — akan langsung hilang dari website.' : '';
+  if (!confirm(`Hapus ulasan dari ${t.display_name || 'pelanggan ini'}?${extra}`)) return;
   try {
     const { error } = await _sb.from('testimonials').delete().eq('id', id);
     if (error) { console.error(error); toast('Gagal menghapus', 'error'); return; }
     tmStore = tmStore.filter(x => x.id !== id);
     tmRenderList();
-    toast('✓ Testimoni dihapus');
+    costSyncSectionTabs();
+    toast('✓ Ulasan dihapus');
   } catch (e) { console.error(e); toast('Gagal menghapus', 'error'); }
 }
 
@@ -7354,6 +8106,7 @@ function costInit() {
   if (!ilState.loaded) ilLoadAll();
   applyBriconWebVisibility();
   if (cpEnabled() && !cpLoaded) cpLoadAll();
+  brwCalcRender();                     // v1.0.70 (Tugas E)
   // v1.0.67: buka lagi di section terakhir yang dipakai
   if (!_csecRestored) {
     _csecRestored = true;
