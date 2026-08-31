@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Invoice Generator · v1.0.75</title>
-<!-- v1.0.75 -->
+<title>Invoice Generator · v1.0.76</title>
+<!-- v1.0.76 -->
 <meta name="description" content="Aplikasi pembuat invoice bata ringan & panel lantai multi-brand">
 <meta name="theme-color" content="#0e9e4a">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1552,6 +1552,57 @@
   .cp-pub.on  { background: #dcfce7; color: #0a7a38; }
   .cp-pub.off { background: #f1f5f9; color: #94a3b8; }
 
+  /* ═══════ v1.0.76: CAKUPAN WILAYAH & BATAS KIRIM (coverage_areas) ═══════ */
+  .ca-group { margin-bottom: 12px; }
+  .ca-sum {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px;
+    padding: 8px 11px; margin-bottom: 6px;
+  }
+  .ca-sum .cnt { font-size: 11px; color: #64748b; font-weight: 600; }
+  .ca-sum .cnt b { font-family: 'JetBrains Mono', monospace; color: #0f172a; }
+  .ca-sum .sp { flex: 1; }
+  .ca-mini {
+    border: 1px solid #e2e8f0; background: #fff; border-radius: 7px;
+    font-size: 10.5px; font-weight: 700; color: #475569; padding: 4px 9px;
+    cursor: pointer; white-space: nowrap; transition: all .15s;
+  }
+  .ca-mini:hover { border-color: var(--brand-color); color: var(--brand-dark); }
+  .ca-row {
+    display: flex; align-items: center; gap: 10px;
+    background: #fff; border: 1px solid #e2e8f0; border-radius: 11px;
+    padding: 9px 12px; margin-bottom: 6px; cursor: pointer;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .ca-row:hover { border-color: var(--brand-color); box-shadow: 0 1px 6px rgba(15,23,42,.06); }
+  .ca-row.tolak { border-color: #fecaca; background: #fffafa; }
+  .ca-row.batas { border-color: #fde68a; background: #fffdf5; }
+  .ca-row-main { min-width: 0; flex: 1; }
+  .ca-row-nama { font-size: 12.5px; font-weight: 700; color: #0f172a; }
+  .ca-row-nama .jn {
+    font-size: 9.5px; font-weight: 700; color: #94a3b8; letter-spacing: .04em;
+    text-transform: uppercase; margin-left: 6px;
+  }
+  .ca-row-note { font-size: 11px; color: #64748b; margin-top: 3px; line-height: 1.45; }
+  .ca-tag {
+    flex-shrink: 0; font-size: 10px; font-weight: 800; border-radius: 999px;
+    padding: 3px 9px; letter-spacing: .02em;
+  }
+  .ca-tag.layan { background: #f1f5f9; color: #94a3b8; }
+  .ca-tag.batas { background: #fef3c7; color: #92400e; }
+  .ca-tag.tolak { background: #fee2e2; color: #b91c1c; }
+  .ca-seg { display: flex; gap: 6px; margin-bottom: 4px; }
+  .ca-seg button {
+    flex: 1; border: 1px solid #e2e8f0; background: #fff; border-radius: 9px;
+    padding: 9px 6px; font-size: 11.5px; font-weight: 700; color: #64748b; cursor: pointer;
+    transition: all .15s;
+  }
+  .ca-seg button.active { border-color: var(--brw-red, #D42B2B); color: var(--brw-red, #D42B2B); background: #fff5f5; }
+  .ca-preview {
+    max-height: 150px; overflow: auto; border: 1px solid #e2e8f0; border-radius: 9px;
+    background: #f8fafc; padding: 9px 11px; font-size: 11px; color: #475569; line-height: 1.7;
+  }
+
   .cp-ref { display: flex; gap: 7px; margin: 4px 0 14px; }
   .cp-ref-box {
     flex: 1; min-width: 0; border-radius: 10px; padding: 9px 10px;
@@ -1978,7 +2029,7 @@
     </div>
     <div class="min-w-0">
       <div class="text-[14px] font-bold text-slate-900 truncate leading-tight">Invoice Generator</div>
-      <div class="text-[10px] text-slate-400 truncate leading-tight" id="appVersionLabel">v1.0.75</div>
+      <div class="text-[10px] text-slate-400 truncate leading-tight" id="appVersionLabel">v1.0.76</div>
     </div>
   </div>
 
@@ -2473,6 +2524,27 @@
           <button class="plog-add-btn" onclick="tmOpenAdd()">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Tambah Ulasan
+          </button>
+        </div>
+      </div>
+
+      <!-- ── Section: Cakupan Wilayah (v1.0.76, khusus Procon lite) ── -->
+      <div data-csec="cakupan">
+        <div class="cost-card brw" id="caCard">
+          <div class="brw-eyebrow">bata-ringan-bricon.com</div>
+          <div class="cost-card-title">Cakupan Wilayah &amp; Batas Kirim</div>
+          <div class="cp-hint">
+            Isi di sini dibaca <b>langsung</b> oleh kotak pencarian Area Layanan di beranda website.
+            Nama kecamatan/desa yang kamu daftarkan bikin pencarian mengenali ketikan sampai
+            level desa. Yang ditandai <b>Batas</b> memunculkan kotak peringatan, yang ditandai
+            <b>Tolak</b> bikin wilayah itu tidak dilayani beserta alasannya.
+            Kabupatennya diambil dari daftar <b>Harga Publik</b> — kalau belum ada di sana,
+            tambah dulu di tab sebelah.
+          </div>
+          <div id="caList"></div>
+          <button class="plog-add-btn" onclick="caOpenAdd()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Tambah Aturan Wilayah
           </button>
         </div>
       </div>
@@ -3068,7 +3140,7 @@ const USER_PP_MAP = {
 // ════════════════════════════════════════════════════════════════
 //  CONSTANTS
 // ════════════════════════════════════════════════════════════════
-const APP_VERSION = '1.0.75';
+const APP_VERSION = '1.0.76';
 const BULAN_ID = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 
 const PANEL_LENGTHS = [97, 147, 172, 197, 222, 247, 272, 297, 322];
@@ -5244,6 +5316,7 @@ const CSEC_ICON = {
   ukuran:      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.3 8.7 8.7 21.3a1 1 0 0 1-1.4 0l-4.6-4.6a1 1 0 0 1 0-1.4L15.3 2.7a1 1 0 0 1 1.4 0l4.6 4.6a1 1 0 0 1 0 1.4"/><path d="m7.5 10.5 2 2"/><path d="m10.5 7.5 2 2"/><path d="m13.5 4.5 2 2"/><path d="m4.5 13.5 2 2"/></svg>`,
   peta:        `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"/><path d="M15 5.764v15"/><path d="M9 3.236v15"/></svg>`,
   kontak:      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 2v2"/><path d="M7 21v-2a2 2 0 012-2h6a2 2 0 012 2v2"/><path d="M8 2v2"/><circle cx="12" cy="10" r="3"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>`,
+  cakupan:     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>`,
   larangan:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>`,
 };
 
@@ -5252,6 +5325,7 @@ const COST_SECTIONS = [
   { id: 'pabrik',      label: 'Harga Pabrik' },
   { id: 'hargapublik', label: 'Harga Publik', lite: true },
   { id: 'testimoni',   label: 'Testimoni',    lite: true },
+  { id: 'cakupan',     label: 'Cakupan',      lite: true },
   { id: 'ukuran',      label: 'Ukuran' },
   { id: 'peta',        label: 'Peta' },
   { id: 'kontak',      label: 'Kontak' },
@@ -5271,6 +5345,7 @@ function costSectionBadgeCount(id) {
     if (id === 'catatan')   return ilEntriesForTab().length;
     if (id === 'testimoni') return tmStore.filter(t => !t.is_published).length;
     if (id === 'larangan')  return ilRestrictions.length;
+    if (id === 'cakupan')   return caStore.filter(r => r.status !== 'layan').length;
     if (id === 'kontak')    return ilContactGroups().length;
   } catch (e) { /* data belum siap */ }
   return 0;
@@ -5821,6 +5896,18 @@ function ilRenderFormAlerts() {
     const label = [restrictHits[0].desa, restrictHits[0].kecamatan, restrictHits[0].kabupaten].filter(Boolean).join(', ');
     html += `<div class="il-restrict-box warn" style="margin-top:10px;">
       ⚠️ <b>${h(label)}</b> — ${h(restrictHits[0].note || 'Ada catatan larangan/limitasi.')}
+    </div>`;
+  }
+
+  // v1.0.76: peringatan kedua, sumbernya tabel Cakupan Wilayah — yang sama
+  // persis dengan yang dilihat pengunjung website. Cuma muncul di akun
+  // proconlite, karena cuma akun itu yang punya isi coverage_areas.
+  const covHits = caMatch(kab, kec, desa);
+  if (covHits.length) {
+    const c = covHits[0];
+    html += `<div class="il-restrict-box warn" style="margin-top:10px;">
+      ⚠️ <b>${h(c.nama)}</b> ${h(c.catatan || 'ditandai ' + caStatusLabel(c.status) + ' di cakupan wilayah.')}
+      <br><span style="font-size:10.5px;opacity:.8;">Kalimat ini juga yang muncul di website (status ${h(caStatusLabel(c.status))}).</span>
     </div>`;
   }
 
@@ -6941,7 +7028,7 @@ function costRenderAll() {
   ilRenderAll();
   // v1.0.67: dua daftar ini tidak ikut merek/produk, tapi tetap digambar ulang
   // supaya isinya selalu sinkron sesudah render apa pun.
-  if (cpEnabled() && cpLoaded) { cpRenderList(); tmRenderList(); }
+  if (cpEnabled() && cpLoaded) { cpRenderList(); tmRenderList(); caRenderList(); }
 }
 
 function ilRenderAll() {
@@ -7095,6 +7182,7 @@ function applyCostTabVisibility() {
 
 let cpStore = [];    // semua baris city_pricing
 let tmStore = [];    // semua baris testimonials milik proconlite
+let caStore = [];    // v1.0.76: semua baris coverage_areas (cakupan wilayah)
 let cpLoaded = false;
 
 function cpEnabled() { return !!(currentUser && currentUser.id === CP_OWNER); }
@@ -7103,26 +7191,30 @@ function cpEnabled() { return !!(currentUser && currentUser.id === CP_OWNER); }
 // applySalesButtonVisibility() / applyMortarPromoButtonVisibility().
 function applyBriconWebVisibility() {
   const on = cpEnabled();
-  ['cpCard', 'tmCard'].forEach(id => {
+  ['cpCard', 'tmCard', 'caCard'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = on ? '' : 'none';
   });
 }
 
 async function cpLoadAll() {
-  if (!cpEnabled()) { cpStore = []; tmStore = []; cpLoaded = false; return; }
+  if (!cpEnabled()) { cpStore = []; tmStore = []; caStore = []; cpLoaded = false; return; }
   try {
-    const [{ data: cp, error: e1 }, { data: tm, error: e2 }] = await Promise.all([
+    const [{ data: cp, error: e1 }, { data: tm, error: e2 }, { data: ca, error: e3 }] = await Promise.all([
       _sb.from('city_pricing').select('*').order('kabupaten', { ascending: true }),
       _sb.from('testimonials').select('*').eq('user_id', CP_OWNER).order('created_at', { ascending: false }),
+      _sb.from('coverage_areas').select('*').order('nama', { ascending: true }),
     ]);
     if (e1) console.error('cpLoadAll city_pricing:', e1);
     if (e2) console.error('cpLoadAll testimonials:', e2);
+    if (e3) console.error('cpLoadAll coverage_areas:', e3);
     cpStore = cp || [];
     tmStore = tm || [];
+    caStore = ca || [];
     cpLoaded = true;
     cpRenderList();
     tmRenderList();
+    caRenderList();
     cpFixUnits();          // v1.0.70 (Tugas D)
   } catch (e) { console.error('cpLoadAll:', e); }
 }
@@ -7535,6 +7627,487 @@ async function cpDeleteKab(rowId) {
     cpRenderList();
     toast('✓ Dihapus');
   } catch (e) { console.error(e); toast('Gagal menghapus', 'error'); }
+}
+
+// ════════════════════════════════════════════════════════════════
+//  v1.0.76 — CAKUPAN WILAYAH & BATAS KIRIM (tabel coverage_areas)
+//
+//  Tabel ini yang bikin kotak pencarian "Area Layanan" di beranda
+//  bata-ringan-bricon.com jadi pintar: pengunjung boleh mengetik nama
+//  kecamatan atau bahkan desa, dan kartu kabupatennya tetap ketemu.
+//  Tiga status:
+//    layan → cuma menambah kata kunci pencarian, tanpa tampilan tambahan
+//    batas → kartunya tetap muncul + kotak kuning berisi kolom `catatan`
+//    tolak → wilayah itu dinyatakan tidak dilayani, pakai teks `catatan`
+//
+//  Gaya penulisan `catatan`: lanjutan kalimat, huruf kecil di awal, karena
+//  di website disambung setelah nama wilayah yang diketik pengunjung —
+//  "Sangkapura ada di Pulau Bawean, belum kami layani."
+//
+//  `slug` WAJIB sama dengan city_pricing.slug, makanya pilihan kabupaten
+//  di sini diambil dari daftar Harga Publik, bukan diketik bebas.
+// ════════════════════════════════════════════════════════════════
+const CA_STATUS_LABEL = { layan: 'Layan', batas: 'Batas', tolak: 'Tolak' };
+
+function caStatusLabel(st) { return CA_STATUS_LABEL[st] || st; }
+function caJenisLabel(j)   { return j === 'desa' ? 'Desa/Kel.' : 'Kecamatan'; }
+function caNorm(s) { return (s || '').toString().replace(/\s+/g, '').trim().toLowerCase(); }
+
+// Kabupaten yang boleh dipakai = yang sudah ada di city_pricing.
+function caKabList() {
+  const seen = {};
+  cpStore.forEach(r => { if (!seen[r.slug]) seen[r.slug] = { slug: r.slug, kab: r.kabupaten }; });
+  return Object.values(seen).sort((a, b) => String(a.kab).localeCompare(String(b.kab), 'id'));
+}
+function caKabName(slug) {
+  const r = cpStore.find(x => x.slug === slug);
+  return r ? r.kabupaten : slug;
+}
+function caSlugOfKabName(name) {
+  const key = cpNormKab(name);
+  const r = cpStore.find(x => cpNormKab(x.kabupaten) === key);
+  return r ? r.slug : '';
+}
+
+// Satu slug bisa cocok ke lebih dari satu wilayah di data Jatim
+// (misal "mojokerto" → Kabupaten Mojokerto DAN Kota Mojokerto). Ambil
+// dua-duanya, karena satu kartu di website memang mewakili keduanya.
+function caRegionNames(slug) {
+  return JATIM_REGIONS.map(r => r.n).filter(n => cpSlugClean(n) === slug);
+}
+function caKecOfSlug(slug) {
+  const out = [];
+  caRegionNames(slug).forEach(n => ilKecOfKab(n).forEach(k => { if (!out.includes(k)) out.push(k); }));
+  return out.sort((a, b) => a.localeCompare(b, 'id'));
+}
+function caDesaOfSlug(slug) {
+  const out = [];
+  caRegionNames(slug).forEach(n => {
+    const kecMap = JATIM_DESA[n] || {};
+    Object.keys(kecMap).forEach(kec => (kecMap[kec] || []).forEach(d => { if (!out.includes(d)) out.push(d); }));
+  });
+  return out.sort((a, b) => a.localeCompare(b, 'id'));
+}
+
+// ── Daftar utama ─────────────────────────────────────────────
+function caRowHtml(r) {
+  return `<div class="ca-row ${r.status}" onclick="caOpenEdit(${r.id})">
+    <div class="ca-row-main">
+      <div class="ca-row-nama">${h(r.nama)}<span class="jn">${h(caJenisLabel(r.jenis))}</span></div>
+      ${r.catatan ? `<div class="ca-row-note">${h(r.catatan)}</div>` : ''}
+    </div>
+    <span class="ca-tag ${r.status}">${h(caStatusLabel(r.status))}</span>
+  </div>`;
+}
+
+function caRenderList() {
+  const box = document.getElementById('caList');
+  if (!box) return;
+  const kabs = caKabList();
+  if (!kabs.length) {
+    box.innerHTML = `<div class="plog-empty">Belum ada kabupaten sama sekali. Tambah dulu di tab <b>Harga Publik</b>, baru wilayahnya bisa diisi di sini.</div>`;
+    return;
+  }
+  const known = {};
+  kabs.forEach(k => { known[k.slug] = true; });
+
+  let html = kabs.map(k => {
+    const rows  = caStore.filter(r => r.slug === k.slug);
+    const nKec  = rows.filter(r => r.jenis === 'kecamatan').length;
+    const nDesa = rows.filter(r => r.jenis === 'desa').length;
+    const flag  = rows.filter(r => r.status !== 'layan')
+      .sort((a, b) => (a.status === b.status ? String(a.nama).localeCompare(String(b.nama), 'id') : (a.status === 'tolak' ? -1 : 1)));
+    return `<div class="ca-group">
+      <div class="cp-group-head">
+        <span class="cp-group-name">${h(k.kab)}</span>
+        <span class="cp-group-slug">/kota/${h(k.slug)}</span>
+      </div>
+      <div class="ca-sum">
+        <span class="cnt"><b>${nKec}</b> kecamatan · <b>${nDesa}</b> desa</span>
+        <span class="sp"></span>
+        <button class="ca-mini" onclick="caOpenImport('${k.slug}')">Impor massal</button>
+        ${rows.length ? `<button class="ca-mini" onclick="caOpenManage('${k.slug}')">Kelola</button>` : ''}
+      </div>
+      ${flag.map(caRowHtml).join('')}
+    </div>`;
+  }).join('');
+
+  // Baris yatim: slug-nya tidak ada lagi di daftar harga, jadi tidak pernah
+  // terpakai di website. Ditampilkan supaya bisa dibersihkan.
+  const orphan = caStore.filter(r => !known[r.slug]);
+  if (orphan.length) {
+    html += `<div class="ca-group">
+      <div class="cp-group-head">
+        <span class="cp-group-name" style="color:#b91c1c;">Tidak terpakai</span>
+        <span class="cp-group-slug">slug tidak ada di Harga Publik</span>
+      </div>
+      ${orphan.map(caRowHtml).join('')}
+    </div>`;
+  }
+  box.innerHTML = html;
+}
+
+// ── Form tambah / ubah ───────────────────────────────────────
+let caForm = { id: null, slug: '', jenis: 'kecamatan', status: 'batas' };
+
+function caSegHtml(name, opts, current) {
+  return `<div class="ca-seg">${opts.map(o =>
+    `<button type="button" class="${o.v === current ? 'active' : ''}" data-seg="${name}" data-v="${o.v}"
+      onclick="caSetSeg('${name}','${o.v}')">${h(o.t)}</button>`).join('')}</div>`;
+}
+function caSetSeg(name, v) {
+  document.querySelectorAll(`[data-seg="${name}"]`).forEach(b => b.classList.toggle('active', b.dataset.v === v));
+  if (name === 'formJenis')  { caForm.jenis  = v; caSyncNamaOptions(); }
+  if (name === 'formStatus') { caForm.status = v; caSyncCatatanHint(); }
+  if (name === 'impSumber')  { caImp.sumber  = v; caRenderImportPreview(); }
+  if (name === 'impJenis')   { caImp.jenis   = v; caRenderImportPreview(); }
+  if (name === 'impStatus')  { caImp.status  = v; caRenderImportPreview(); }
+}
+
+function caSyncNamaOptions() {
+  const opts = caForm.slug
+    ? (caForm.jenis === 'desa' ? caDesaOfSlug(caForm.slug) : caKecOfSlug(caForm.slug))
+    : [];
+  ilComboSetOptions('caNama', opts);
+}
+function caSyncCatatanHint() {
+  const el = document.getElementById('caCatatanHint');
+  if (!el) return;
+  el.innerHTML = caForm.status === 'layan'
+    ? 'Status <b>Layan</b> tidak menampilkan catatan apa pun di website — kolom ini boleh dikosongkan.'
+    : 'Ditampilkan ke pengunjung, disambung setelah nama wilayah. Tulis sebagai <b>lanjutan kalimat</b>, huruf kecil di awal — contoh: <i>ada di Pulau Bawean, belum kami layani.</i>';
+}
+
+function caFormBody(row) {
+  const kabs = caKabList();
+  const kabName = caForm.slug ? caKabName(caForm.slug) : '';
+  return `
+    <label class="cost-modal-label">Kabupaten / Kota</label>
+    ${ilComboHtml('caKab', 'Pilih dari daftar Harga Publik', { value: kabName })}
+    ${kabs.length ? '' : '<div style="font-size:10.5px;color:#b91c1c;margin-top:5px;">Daftar Harga Publik masih kosong — isi dulu di tab sebelah.</div>'}
+
+    <div style="height:12px;"></div>
+    <label class="cost-modal-label">Jenis Wilayah</label>
+    ${caSegHtml('formJenis', [{ v: 'kecamatan', t: 'Kecamatan' }, { v: 'desa', t: 'Desa / Kelurahan' }], caForm.jenis)}
+
+    <div style="height:10px;"></div>
+    <label class="cost-modal-label">Nama Wilayah</label>
+    ${ilComboHtml('caNama', 'Contoh: Sangkapura', { value: row ? row.nama : '' })}
+
+    <div style="height:12px;"></div>
+    <label class="cost-modal-label">Status</label>
+    ${caSegHtml('formStatus', [{ v: 'layan', t: 'Layan' }, { v: 'batas', t: 'Batas' }, { v: 'tolak', t: 'Tolak' }], caForm.status)}
+
+    <div style="height:10px;"></div>
+    <label class="cost-modal-label">Catatan untuk Pengunjung</label>
+    <textarea class="input" id="caCatatan" rows="2" placeholder="ada di Pulau Bawean, belum kami layani.">${row && row.catatan ? h(row.catatan) : ''}</textarea>
+    <div style="font-size:10.5px;color:#94a3b8;margin-top:5px;line-height:1.5;" id="caCatatanHint"></div>
+  `;
+}
+
+function caBindForm() {
+  ilComboRegister('caKab', caKabList().map(k => k.kab), (v) => {
+    caForm.slug = caSlugOfKabName(v);
+    ilComboReset('caNama');
+    caSyncNamaOptions();
+  });
+  ilComboRegister('caNama', []);
+  caSyncNamaOptions();
+  caSyncCatatanHint();
+}
+
+function caOpenAdd(preSlug) {
+  caForm = { id: null, slug: preSlug || '', jenis: 'kecamatan', status: 'batas' };
+  costModal(`
+    <div class="cost-modal-title">Tambah Aturan Wilayah</div>
+    <div class="cost-modal-sub">Satu baris = satu kecamatan atau satu desa. Buat mendaftarkan banyak nama sekaligus, pakai <b>Impor massal</b> di daftarnya.</div>
+    ${caFormBody(null)}
+    <div class="cost-modal-actions">
+      <button class="cost-btn" onclick="costCloseModal()">Batal</button>
+      <button class="cost-btn primary" onclick="caSaveNew()">Simpan</button>
+    </div>
+  `);
+  caBindForm();
+}
+
+function caOpenEdit(id) {
+  const r = caStore.find(x => x.id === id);
+  if (!r) return;
+  caForm = { id: r.id, slug: r.slug, jenis: r.jenis, status: r.status };
+  costModal(`
+    <div class="cost-modal-title">Ubah Aturan Wilayah</div>
+    <div class="cost-modal-sub">${h(caKabName(r.slug))} · <b>${h(r.nama)}</b></div>
+    ${caFormBody(r)}
+    <div class="cost-modal-actions">
+      <button class="cost-btn" onclick="caDelete(${r.id})" style="color:#dc2626;">Hapus</button>
+      <button class="cost-btn primary" onclick="caSaveEdit(${r.id})">Simpan</button>
+    </div>
+  `);
+  caBindForm();
+}
+
+function caReadForm() {
+  const nama = (document.getElementById('caNama') || {}).value?.trim() || '';
+  const catatan = (document.getElementById('caCatatan') || {}).value?.trim() || '';
+  // Kalau nama kabupatennya diketik manual (bukan dipilih dari daftar),
+  // onSelect tidak pernah jalan — jadi slug-nya dicari ulang di sini.
+  if (!caForm.slug) caForm.slug = caSlugOfKabName((document.getElementById('caKab') || {}).value || '');
+  if (!caForm.slug) { toast('Kabupatennya harus yang sudah ada di Harga Publik', 'error'); return null; }
+  if (!nama)        { toast('Nama wilayah belum diisi', 'error'); return null; }
+  if (caForm.status !== 'layan' && !catatan) {
+    toast('Status Batas/Tolak wajib punya catatan', 'error'); return null;
+  }
+  return { slug: caForm.slug, nama, jenis: caForm.jenis, status: caForm.status, catatan: catatan || null };
+}
+
+function caIsDuplicate(slug, jenis, nama, exceptId) {
+  const key = caNorm(nama);
+  return caStore.some(r => r.slug === slug && r.jenis === jenis && caNorm(r.nama) === key && r.id !== exceptId);
+}
+
+async function caSaveNew() {
+  const payload = caReadForm();
+  if (!payload) return;
+  if (caIsDuplicate(payload.slug, payload.jenis, payload.nama)) {
+    toast('Wilayah itu sudah terdaftar', 'error'); return;
+  }
+  try {
+    const { data, error } = await _sb.from('coverage_areas').insert(payload).select().single();
+    if (error) { console.error(error); toast('Gagal menyimpan', 'error'); return; }
+    caStore.push(data);
+    costCloseModal();
+    caRenderList();
+    costSyncSectionTabs();
+    toast('✓ ' + payload.nama + ' ditambahkan');
+  } catch (e) { console.error(e); toast('Gagal menyimpan', 'error'); }
+}
+
+async function caSaveEdit(id) {
+  const payload = caReadForm();
+  if (!payload) return;
+  if (caIsDuplicate(payload.slug, payload.jenis, payload.nama, id)) {
+    toast('Wilayah itu sudah terdaftar', 'error'); return;
+  }
+  payload.updated_at = new Date().toISOString();
+  try {
+    const { data, error } = await _sb.from('coverage_areas').update(payload).eq('id', id).select().single();
+    if (error) { console.error(error); toast('Gagal menyimpan', 'error'); return; }
+    const r = caStore.find(x => x.id === id);
+    if (r) Object.assign(r, data);
+    costCloseModal();
+    caRenderList();
+    costSyncSectionTabs();
+    toast('✓ Tersimpan');
+  } catch (e) { console.error(e); toast('Gagal menyimpan', 'error'); }
+}
+
+async function caDelete(id) {
+  const r = caStore.find(x => x.id === id);
+  if (!r) return;
+  if (!confirm(`Hapus ${r.nama} dari daftar cakupan?`)) return;
+  try {
+    const { error } = await _sb.from('coverage_areas').delete().eq('id', id);
+    if (error) { console.error(error); toast('Gagal menghapus', 'error'); return; }
+    caStore = caStore.filter(x => x.id !== id);
+    costCloseModal();
+    caRenderList();
+    costSyncSectionTabs();
+    toast('Dihapus');
+  } catch (e) { console.error(e); toast('Gagal menghapus', 'error'); }
+}
+
+// Ganti status tanpa buka form — dipakai di layar Kelola.
+async function caSetStatus(id, st) {
+  const r = caStore.find(x => x.id === id);
+  if (!r || r.status === st) return;
+  if (st !== 'layan' && !r.catatan) {
+    toast('Isi catatannya dulu — status ini butuh alasan', 'error');
+    caOpenEdit(id);
+    return;
+  }
+  try {
+    const { data, error } = await _sb.from('coverage_areas')
+      .update({ status: st, updated_at: new Date().toISOString() }).eq('id', id).select().single();
+    if (error) { console.error(error); toast('Gagal mengubah', 'error'); return; }
+    Object.assign(r, data);
+    caRenderManage();
+    caRenderList();
+    costSyncSectionTabs();
+  } catch (e) { console.error(e); toast('Gagal mengubah', 'error'); }
+}
+
+// ── Layar Kelola (semua baris satu kabupaten) ────────────────
+let caManage = { slug: '', q: '' };
+
+function caOpenManage(slug) {
+  caManage = { slug, q: '' };
+  costModal(`
+    <div class="cost-modal-title">Kelola Wilayah</div>
+    <div class="cost-modal-sub">${h(caKabName(slug))} · /kota/${h(slug)}</div>
+    <input class="input text-sm" id="caManageSearch" placeholder="Cari nama wilayah..." autocomplete="off"
+           oninput="caManage.q=this.value; caRenderManage();" style="padding:9px 12px;">
+    <div style="height:10px;"></div>
+    <div id="caManageList" style="max-height:52vh;overflow:auto;"></div>
+    <div class="cost-modal-actions">
+      <button class="cost-btn" onclick="caDeleteAll('${slug}','desa')" style="color:#dc2626;">Hapus semua desa</button>
+      <button class="cost-btn primary" onclick="caOpenAdd('${slug}')">Tambah satu</button>
+    </div>
+  `);
+  caRenderManage();
+}
+
+function caRenderManage() {
+  const box = document.getElementById('caManageList');
+  if (!box) return;
+  const q = caNorm(caManage.q);
+  const rows = caStore
+    .filter(r => r.slug === caManage.slug)
+    .filter(r => !q || caNorm(r.nama).includes(q))
+    .sort((a, b) => (a.jenis === b.jenis
+      ? String(a.nama).localeCompare(String(b.nama), 'id')
+      : (a.jenis === 'kecamatan' ? -1 : 1)));
+  if (!rows.length) { box.innerHTML = `<div class="plog-empty">Tidak ada yang cocok.</div>`; return; }
+  box.innerHTML = rows.slice(0, 400).map(r => `
+    <div class="ca-row ${r.status}" style="cursor:default;">
+      <div class="ca-row-main" onclick="caOpenEdit(${r.id})" style="cursor:pointer;">
+        <div class="ca-row-nama">${h(r.nama)}<span class="jn">${h(caJenisLabel(r.jenis))}</span></div>
+        ${r.catatan ? `<div class="ca-row-note">${h(r.catatan)}</div>` : ''}
+      </div>
+      <div style="display:flex;gap:4px;flex-shrink:0;">
+        ${['layan', 'batas', 'tolak'].map(st => `
+          <button class="ca-mini" style="${r.status === st ? 'border-color:var(--brw-red,#D42B2B);color:var(--brw-red,#D42B2B);' : ''}"
+            onclick="caSetStatus(${r.id},'${st}')">${caStatusLabel(st)}</button>`).join('')}
+      </div>
+    </div>`).join('')
+    + (rows.length > 400 ? `<div class="plog-empty">…dan ${rows.length - 400} lagi. Pakai kotak cari di atas.</div>` : '');
+}
+
+async function caDeleteAll(slug, jenis) {
+  const n = caStore.filter(r => r.slug === slug && r.jenis === jenis).length;
+  if (!n) { toast('Tidak ada yang perlu dihapus'); return; }
+  if (!confirm(`Hapus ${n} baris ${caJenisLabel(jenis)} di ${caKabName(slug)}?\nAturan Batas/Tolak-nya ikut hilang.`)) return;
+  try {
+    const { error } = await _sb.from('coverage_areas').delete().eq('slug', slug).eq('jenis', jenis);
+    if (error) { console.error(error); toast('Gagal menghapus', 'error'); return; }
+    caStore = caStore.filter(r => !(r.slug === slug && r.jenis === jenis));
+    caRenderManage();
+    caRenderList();
+    costSyncSectionTabs();
+    toast('✓ ' + n + ' baris dihapus');
+  } catch (e) { console.error(e); toast('Gagal menghapus', 'error'); }
+}
+
+// ── Impor massal ─────────────────────────────────────────────
+let caImp = { slug: '', sumber: 'auto', jenis: 'kecamatan', status: 'layan' };
+
+function caOpenImport(slug) {
+  caImp = { slug, sumber: 'auto', jenis: 'kecamatan', status: 'layan' };
+  costModal(`
+    <div class="cost-modal-title">Impor Massal</div>
+    <div class="cost-modal-sub">${h(caKabName(slug))} · nama yang sudah terdaftar otomatis dilewati.</div>
+
+    <label class="cost-modal-label">Sumber Nama</label>
+    ${caSegHtml('impSumber', [{ v: 'auto', t: 'Data Jawa Timur' }, { v: 'paste', t: 'Tempel sendiri' }], caImp.sumber)}
+
+    <div style="height:10px;"></div>
+    <label class="cost-modal-label">Jenis Wilayah</label>
+    ${caSegHtml('impJenis', [{ v: 'kecamatan', t: 'Kecamatan' }, { v: 'desa', t: 'Desa / Kelurahan' }], caImp.jenis)}
+
+    <div id="caImpPasteWrap" style="display:none;">
+      <div style="height:10px;"></div>
+      <label class="cost-modal-label">Daftar Nama</label>
+      <textarea class="input" id="caImpPaste" rows="5" placeholder="Satu nama per baris" oninput="caRenderImportPreview()"></textarea>
+    </div>
+
+    <div style="height:12px;"></div>
+    <label class="cost-modal-label">Status untuk Semuanya</label>
+    ${caSegHtml('impStatus', [{ v: 'layan', t: 'Layan' }, { v: 'batas', t: 'Batas' }, { v: 'tolak', t: 'Tolak' }], caImp.status)}
+
+    <div id="caImpCatatanWrap" style="display:none;">
+      <div style="height:10px;"></div>
+      <label class="cost-modal-label">Catatan untuk Pengunjung</label>
+      <textarea class="input" id="caImpCatatan" rows="2" placeholder="ada di Pulau Bawean, belum kami layani."></textarea>
+    </div>
+
+    <div style="height:12px;"></div>
+    <div id="caImpPreview"></div>
+
+    <div class="cost-modal-actions">
+      <button class="cost-btn" onclick="costCloseModal()">Batal</button>
+      <button class="cost-btn primary" onclick="caRunImport()">Impor</button>
+    </div>
+  `);
+  caRenderImportPreview();
+}
+
+function caImportNames() {
+  if (caImp.sumber === 'paste') {
+    const raw = (document.getElementById('caImpPaste') || {}).value || '';
+    const seen = {};
+    return raw.split('\n').map(x => x.replace(/^[\s\-•*\d.]+/, '').trim())
+      .filter(x => x.length > 1)
+      .filter(x => { const k = caNorm(x); if (seen[k]) return false; seen[k] = 1; return true; });
+  }
+  return caImp.jenis === 'desa' ? caDesaOfSlug(caImp.slug) : caKecOfSlug(caImp.slug);
+}
+
+function caRenderImportPreview() {
+  const pw = document.getElementById('caImpPasteWrap');
+  if (pw) pw.style.display = caImp.sumber === 'paste' ? '' : 'none';
+  const cw = document.getElementById('caImpCatatanWrap');
+  if (cw) cw.style.display = caImp.status === 'layan' ? 'none' : '';
+
+  const box = document.getElementById('caImpPreview');
+  if (!box) return;
+  const all = caImportNames();
+  const baru = all.filter(n => !caIsDuplicate(caImp.slug, caImp.jenis, n));
+  if (!all.length) {
+    box.innerHTML = `<div class="ca-preview">Belum ada nama yang bisa diimpor.${
+      caImp.sumber === 'auto' ? ' Data Jawa Timur tidak punya daftar untuk kabupaten ini — pakai mode <b>Tempel sendiri</b>.' : ''}</div>`;
+    return;
+  }
+  box.innerHTML = `<div class="ca-preview">
+    <b>${baru.length}</b> nama akan ditambahkan sebagai <b>${h(caJenisLabel(caImp.jenis))}</b> berstatus <b>${h(caStatusLabel(caImp.status))}</b>${
+      all.length - baru.length ? ` — ${all.length - baru.length} sudah terdaftar, dilewati` : ''}.<br>
+    <span style="color:#94a3b8;">${h(baru.slice(0, 40).join(', '))}${baru.length > 40 ? ` … +${baru.length - 40} lagi` : ''}</span>
+  </div>`;
+}
+
+async function caRunImport() {
+  const catatan = (document.getElementById('caImpCatatan') || {}).value?.trim() || '';
+  if (caImp.status !== 'layan' && !catatan) { toast('Status Batas/Tolak wajib punya catatan', 'error'); return; }
+  const baru = caImportNames().filter(n => !caIsDuplicate(caImp.slug, caImp.jenis, n));
+  if (!baru.length) { toast('Tidak ada nama baru', 'error'); return; }
+  if (!confirm(`Tambahkan ${baru.length} wilayah ke ${caKabName(caImp.slug)}?`)) return;
+
+  const rows = baru.map(n => ({
+    slug: caImp.slug, nama: n, jenis: caImp.jenis,
+    status: caImp.status, catatan: catatan || null,
+  }));
+  try {
+    // Dipecah per 400 baris supaya satu permintaan tidak kebesaran.
+    for (let i = 0; i < rows.length; i += 400) {
+      const { data, error } = await _sb.from('coverage_areas').insert(rows.slice(i, i + 400)).select();
+      if (error) { console.error(error); toast('Gagal impor di baris ke-' + (i + 1), 'error'); break; }
+      caStore = caStore.concat(data || []);
+    }
+    costCloseModal();
+    caRenderList();
+    costSyncSectionTabs();
+    toast('✓ ' + baru.length + ' wilayah diimpor');
+  } catch (e) { console.error(e); toast('Gagal impor', 'error'); }
+}
+
+// ── Dipakai form Tanya Harga: peringatan wilayah terbatas ────
+// Cocokkan sampai level paling spesifik: desa dulu, baru kecamatan.
+function caMatch(kab, kec, desa) {
+  if (!caStore.length) return [];
+  const slug = caSlugOfKabName(kab);
+  if (!slug) return [];
+  const rows = caStore.filter(r => r.slug === slug && r.status !== 'layan');
+  const hitDesa = desa ? rows.filter(r => r.jenis === 'desa' && caNorm(r.nama) === caNorm(desa)) : [];
+  if (hitDesa.length) return hitDesa;
+  return kec ? rows.filter(r => r.jenis === 'kecamatan' && caNorm(r.nama) === caNorm(kec)) : [];
 }
 
 // ════════════════════════════════════════════════════════════════
