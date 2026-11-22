@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Invoice Generator · v1.0.77</title>
-<!-- v1.0.77 -->
+<title>Invoice Generator · v1.0.78</title>
+<!-- v1.0.78 -->
 <meta name="description" content="Aplikasi pembuat invoice bata ringan & panel lantai multi-brand">
 <meta name="theme-color" content="#0e9e4a">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1953,6 +1953,72 @@
   .tm-count.good { color: #0a7a38; }
   .tm-count.warn { color: #b45309; }
 
+  /* ═══════ v1.0.78: pratinjau kartu ulasan = desain website terbaru ═══════
+     Website (dikunci 30 Agustus 2026): badge produk di pojok kanan atas,
+     ikon kutip → bintang → kutipan → ikon orang + nama + lokasi (pin). */
+  .tm-prev { position: relative; }
+  .tm-prev-prod {
+    position: absolute; top: 10px; right: 10px; display: inline-flex; align-items: center; gap: 4px;
+    font-size: 9.5px; font-weight: 700; color: var(--brw-ink); background: var(--brw-track);
+    border: 1px solid var(--brw-line); border-radius: 999px; padding: 2px 8px;
+  }
+  .tm-prev.featured .tm-prev-prod { color: #fff; background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.16); }
+  .tm-prev-mark { width: 20px; height: 20px; color: var(--brw-red); display: block; margin-bottom: 6px; }
+  .tm-prev.featured .tm-prev-mark { color: var(--brw-yellow); }
+  .tm-prev-foot { display: flex; align-items: center; gap: 9px; margin-top: 10px; }
+  .tm-prev-ic {
+    width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    background: var(--brw-track); color: var(--brw-muted);
+  }
+  .tm-prev.featured .tm-prev-ic { background: rgba(255,255,255,.1); color: rgba(255,255,255,.75); }
+  .tm-prev-ic svg { width: 15px; height: 15px; }
+  .tm-prev-loc { display: flex; align-items: center; gap: 3px; font-size: 10.5px; color: var(--brw-muted2); margin-top: 1px; }
+  .tm-prev.featured .tm-prev-loc { color: rgba(255,255,255,.55); }
+  .tm-prev-loc svg { width: 11px; height: 11px; flex-shrink: 0; }
+
+  /* ═══════ v1.0.78: LINK ULASAN & ATURAN TAMPIL ═══════ */
+  .tm-subhead {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: .07em;
+    text-transform: uppercase; color: #94a3b8; margin: 16px 0 8px;
+  }
+  .tm-rules { border: 1px solid #e2e8f0; border-radius: 12px; background: #f8fafc; padding: 11px 12px; margin-top: 12px; }
+  .tm-rules-head { display: flex; align-items: center; gap: 8px; }
+  .tm-rules-head .t { font-size: 12.5px; font-weight: 800; color: #0f172a; flex: 1; }
+  .tm-rules-head .live { font-size: 10.5px; font-weight: 700; color: #0a7a38; background: #dcfce7; border-radius: 999px; padding: 3px 9px; }
+  .tm-rules-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 10px; margin-top: 10px; }
+  .tm-rules-grid .full { grid-column: 1 / -1; }
+  .tm-rules label.k { display: block; font-size: 10.5px; font-weight: 700; color: #64748b; margin-bottom: 4px; }
+  .tm-rules select.input { height: 36px; padding: 0 10px; font-size: 12.5px; }
+  .tm-rules .cp-checkline { margin-top: 4px; background: #fff; }
+  .tm-rules-note { font-size: 10.5px; color: #94a3b8; line-height: 1.5; margin-top: 8px; }
+  .rr-item {
+    display: flex; align-items: center; gap: 10px; background: #fff; border: 1px solid #e2e8f0;
+    border-radius: 11px; padding: 9px 11px; margin-bottom: 6px;
+  }
+  .rr-main { flex: 1; min-width: 0; }
+  .rr-name { font-size: 12.5px; font-weight: 800; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rr-sub { font-size: 10.5px; color: #94a3b8; margin-top: 2px; }
+  .rr-tag { font-size: 9.5px; font-weight: 800; border-radius: 999px; padding: 3px 8px; flex-shrink: 0; }
+  .rr-tag.wait { background: #fef3c7; color: #92400e; }
+  .rr-tag.done { background: #dcfce7; color: #0a7a38; }
+  .rr-tag.exp  { background: #f1f5f9; color: #94a3b8; }
+  .rr-btn {
+    width: 32px; height: 32px; border-radius: 8px; border: 1px solid #e2e8f0; background: #f8fafc; color: #475569;
+    display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0;
+  }
+  .rr-btn:hover { border-color: var(--brand-color); color: var(--brand-dark); }
+  .rr-btn.wa { color: #0a7a38; border-color: #bbf7d0; background: #f0fdf4; }
+  .rr-btn.del { color: #dc2626; border-color: #fecaca; background: #fef2f2; }
+  .rr-btn svg { width: 15px; height: 15px; }
+  .rr-linkbox {
+    font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: #0f172a; background: #f8fafc;
+    border: 1px dashed #cbd5e1; border-radius: 10px; padding: 10px 12px; word-break: break-all; margin-top: 6px;
+  }
+  .rr-msg { font-size: 11.5px; color: #475569; line-height: 1.6; white-space: pre-wrap; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 10px 12px; margin-top: 6px; }
+  .tm-badge.fromlink { background: #ede9fe; color: #6d28d9; }
+  .tm-badge.filtered { background: #fef3c7; color: #92400e; }
+  .tm-act.pin { color: #1C1C1E; border-color: #F5C200; background: #FFF8DB; }
+
   /* ── Tugas E: kalkulator ukuran ────────────────────────────── */
   .brw-calc-note {
     font-size: 10.5px; color: var(--brw-muted2); line-height: 1.55; margin-top: 10px;
@@ -2029,7 +2095,7 @@
     </div>
     <div class="min-w-0">
       <div class="text-[14px] font-bold text-slate-900 truncate leading-tight">Invoice Generator</div>
-      <div class="text-[10px] text-slate-400 truncate leading-tight" id="appVersionLabel">v1.0.77</div>
+      <div class="text-[10px] text-slate-400 truncate leading-tight" id="appVersionLabel">v1.0.78</div>
     </div>
   </div>
 
@@ -2516,14 +2582,25 @@
           <div class="brw-eyebrow" data-site-domain></div>
           <div class="cost-card-title">Testimoni Pelanggan</div>
           <div class="cp-hint">
-            Salin balasan WhatsApp pelanggan ke sini. Website <b>membaca langsung</b> dari
-            database: begitu ditayangkan, ulasannya muncul di section "Kata pembeli kami"
-            dalam hitungan detik. Yang paling baru jadi kartu besar di paling depan.
+            Kirim <b>link ulasan</b> ke pelanggan yang sudah closing — mereka mengisi bintang &amp;
+            ulasannya sendiri. Ulasan yang masuk muncul di daftar bawah dan <b>belum tayang</b>
+            sampai kamu memilihnya (kecuali "Tayang otomatis" dinyalakan). Website membaca
+            langsung dari database, jadi perubahan terlihat dalam hitungan detik.
           </div>
+          <div id="tmRules"></div>
+
+          <div class="tm-subhead">Link ulasan ke pelanggan</div>
+          <div id="rrList"></div>
+          <button class="plog-add-btn" onclick="rrOpenCreate()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            Buat Link Ulasan
+          </button>
+
+          <div class="tm-subhead">Semua ulasan</div>
           <div id="tmList"></div>
           <button class="plog-add-btn" onclick="tmOpenAdd()">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Tambah Ulasan
+            Tambah Ulasan Manual
           </button>
         </div>
       </div>
@@ -3140,7 +3217,7 @@ const USER_PP_MAP = {
 // ════════════════════════════════════════════════════════════════
 //  CONSTANTS
 // ════════════════════════════════════════════════════════════════
-const APP_VERSION = '1.0.77';
+const APP_VERSION = '1.0.78';
 
 // v1.0.77: SATU-SATUNYA tempat domain website. Domain lama sudah disuspend
 // (11 Nov 2026) dan tidak boleh muncul lagi; kalau ganti domain lagi,
@@ -7037,7 +7114,7 @@ function costRenderAll() {
   ilRenderAll();
   // v1.0.67: dua daftar ini tidak ikut merek/produk, tapi tetap digambar ulang
   // supaya isinya selalu sinkron sesudah render apa pun.
-  if (cpEnabled() && cpLoaded) { cpRenderList(); tmRenderList(); caRenderList(); }
+  if (cpEnabled() && cpLoaded) { cpRenderList(); tmRenderRules(); rrRenderList(); tmRenderList(); caRenderList(); }
 }
 
 function ilRenderAll() {
@@ -7225,6 +7302,7 @@ async function cpLoadAll() {
     tmRenderList();
     caRenderList();
     cpFixUnits();          // v1.0.70 (Tugas D)
+    rrLoadAll();           // v1.0.78: link ulasan & aturan tampil
   } catch (e) { console.error('cpLoadAll:', e); }
 }
 
@@ -8331,28 +8409,48 @@ function tmInitials(name) {
   return (w[0][0] + w[w.length - 1][0]).toUpperCase();
 }
 
-// Baris mana yang jadi kartu besar gelap di website: yang paling baru
-// di antara yang lolos syarat (is_published = true AND consent_name = true).
+// v1.0.78: daftar yang BENAR-BENAR tampil di website. Rumusnya harus sama
+// persis dengan fungsi database ulasan_publik() yang dibaca website:
+//   tayang + izin nama + bintang >= minimal, urut: disematkan dulu, lalu
+//   (bintang tertinggi kalau dipilih), lalu terbaru; dipotong jumlah maksimal.
+function tmLiveList() {
+  const rs = rsGet();
+  return tmStore
+    .filter(t => t.is_published && t.consent_name && (t.rating == null ? 5 : Number(t.rating)) >= rs.min_rating)
+    .slice()
+    .sort((a, b) => {
+      if (!!b.is_pinned !== !!a.is_pinned) return b.is_pinned ? 1 : -1;
+      if (rs.urutan === 'bintang' && Number(b.rating) !== Number(a.rating)) return Number(b.rating) - Number(a.rating);
+      return new Date(b.created_at) - new Date(a.created_at);
+    })
+    .slice(0, rs.max_tampil);
+}
+// Baris mana yang jadi kartu besar gelap di website: urutan pertama tmLiveList().
 function tmFeaturedId() {
-  const live = tmStore.filter(t => t.is_published && t.consent_name);
-  if (!live.length) return null;
-  return live.slice().sort((a, b) => new Date(b.created_at) - new Date(a.created_at))[0].id;
+  const live = tmLiveList();
+  return live.length ? live[0].id : null;
 }
 
+const TM_SVG_KUTIP = '<svg class="tm-prev-mark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.01 14v4c0 1.1.9 2 2 2h6c1.1 0 2-.9 2-2v-6c0-1.1-.9-2-2-2h-2.85c.27-1.02 1.01-2.51 3.1-3.03l.76-.19V4h-1c-2.78 0-4.91.77-6.31 2.29-1.89 2.05-1.7 4.68-1.69 4.71v3Zm3.18-6.37c.48-.52 1.11-.91 1.87-1.19-1.56 1.42-2.04 3.4-2.04 4.56v1h5v6h-6v-7.08s-.12-1.9 1.18-3.29ZM1.01 18c0 1.1.9 2 2 2h6c1.1 0 2-.9 2-2v-6c0-1.1-.9-2-2-2H6.16c.27-1.02 1.01-2.51 3.1-3.03l.76-.19V4h-1c-2.78 0-4.91.77-6.31 2.29C.82 8.34 1.01 10.97 1.02 11v7Zm2-7.08s-.12-1.9 1.18-3.29c.48-.52 1.11-.91 1.87-1.19C4.5 7.86 4.02 9.84 4.02 11v1h5v6H3.01z"/></svg>';
+const TM_SVG_ORANG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+const TM_SVG_PIN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>';
+
+// v1.0.78: disamakan dengan kartu di website (lihat komentar CSS .tm-prev-prod).
 function tmPreviewHtml(t, featured) {
-  const kab = (t.kabupaten || '').toUpperCase();
-  const prod = cpProdLabel(t.product || 'bata').toUpperCase();
+  const prod = cpProdLabel(t.product || 'bata');
   return `<div class="tm-prev${featured ? ' featured' : ''}">
     <div class="tm-prev-tag">${featured ? '★ kartu besar — paling depan di website' : 'kartu ringkas'}</div>
-    <div class="tm-prev-top">
-      <div class="tm-prev-av">${h(tmInitials(t.display_name))}</div>
+    <span class="tm-prev-prod">${h(prod)}</span>
+    ${TM_SVG_KUTIP}
+    <div class="tm-prev-stars"><span class="tm-stars">${tmStars(t.rating)}</span></div>
+    <div class="tm-prev-quote">${h(t.quote || '')}</div>
+    <div class="tm-prev-foot">
+      <span class="tm-prev-ic">${TM_SVG_ORANG}</span>
       <div class="tm-prev-id">
         <div class="tm-prev-name">${h(t.display_name || '—')}</div>
-        <div class="tm-prev-meta">${h(kab || '—')} · ${h(prod)}</div>
+        ${t.kabupaten ? `<div class="tm-prev-loc">${TM_SVG_PIN}${h(t.kabupaten)}</div>` : ''}
       </div>
     </div>
-    <div class="tm-prev-stars"><span class="tm-stars">${tmStars(t.rating)}</span></div>
-    <div class="tm-prev-quote">“${h(t.quote || '')}”</div>
   </div>`;
 }
 
@@ -8360,13 +8458,18 @@ function tmRenderList() {
   const box = document.getElementById('tmList');
   if (!box) return;
   if (!tmStore.length) {
-    box.innerHTML = `<div class="plog-empty">Belum ada ulasan.<br>Minta ke pelanggan yang sudah closing lewat WhatsApp, lalu salin balasannya ke sini.<br><br>Selama belum ada satu pun yang tayang, section "Kata pembeli kami" di website <b>tersembunyi total</b> — begitu juga link Ulasan di navbar &amp; footer.</div>`;
+    box.innerHTML = `<div class="plog-empty">Belum ada ulasan.<br>Tekan <b>Buat Link Ulasan</b> di atas lalu kirim ke pelanggan yang sudah closing — ulasannya masuk ke sini sendiri.<br><br>Selama belum ada satu pun yang tayang, section "Kata pembeli kami" di website <b>tersembunyi total</b> — begitu juga link Ulasan di navbar &amp; footer.</div>`;
     return;
   }
-  const featId = tmFeaturedId();
+  const liveList = tmLiveList();
+  const liveIds = new Set(liveList.map(x => x.id));
+  const featId = liveList.length ? liveList[0].id : null;
+  const rs = rsGet();
   box.innerHTML = tmStore.map(t => {
     const live = !!t.is_published;
     const locked = !t.consent_name;
+    const filtered = live && !locked && !liveIds.has(t.id);
+    const fromLink = t.source === 'link';
     return `
     <div class="tm-item">
       <div class="tm-item-top">
@@ -8375,13 +8478,18 @@ function tmRenderList() {
         <span class="tm-score">${tmRatingText(t.rating)}<span class="word">${tmRatingWord(t.rating)}</span></span>
         <span class="tm-badge ${live ? 'live' : 'notlive'}">${live ? 'Tayang di website' : 'Belum tayang'}</span>
         ${t.id === featId ? '<span class="tm-featured-flag">kartu besar</span>' : ''}
+        ${t.is_pinned ? '<span class="tm-badge filtered">disematkan</span>' : ''}
+        ${fromLink ? `<span class="tm-badge fromlink">${live ? 'dari link pelanggan' : 'baru dari pelanggan'}</span>` : ''}
+        ${filtered ? `<span class="tm-badge filtered">tersaring aturan</span>` : ''}
       </div>
       <div class="tm-item-sub">${cpProdLabel(t.product || 'bata')}${t.kabupaten ? ' · ' + h(t.kabupaten) : ''} · ${(t.quote || '').length} karakter</div>
       ${tmPreviewHtml(t, t.id === featId)}
       ${locked ? `<div class="tm-lock-note">Belum ada izin nama dari pelanggan — ulasan ini tidak bisa ditayangkan. Website memang hanya membaca baris yang izin namanya sudah tercatat.</div>` : ''}
+      ${filtered ? `<div class="tm-lock-note" style="color:#92400e;background:#fffbeb;border-color:#fde68a;">Statusnya tayang, tapi tidak muncul di website karena aturan: ${Number(t.rating) < rs.min_rating ? `bintangnya di bawah minimal ${tmRatingText(rs.min_rating)}` : `sudah lewat batas ${rs.max_tampil} ulasan`}.</div>` : ''}
       <div class="tm-actions">
         <button class="tm-act${live ? '' : ' go'}"${locked ? ' disabled title="Belum ada izin nama dari pelanggan"' : ` onclick="tmTogglePublished(${t.id})"`}>${live ? 'Sembunyikan dari website' : 'Tampilkan di website'}</button>
         ${locked ? `<button class="tm-act consent" onclick="tmGrantConsent(${t.id})">Catat izin nama</button>` : ''}
+        ${live && !locked && rrReady ? `<button class="tm-act${t.is_pinned ? '' : ' pin'}" onclick="tmTogglePin(${t.id})">${t.is_pinned ? 'Lepas sematan' : 'Jadikan kartu besar'}</button>` : ''}
         <button class="tm-act" onclick="tmOpenEdit(${t.id})">Ubah</button>
         <button class="tm-act danger" onclick="tmRemove(${t.id})">Hapus</button>
       </div>
@@ -8432,7 +8540,6 @@ function tmOpenForm(editId) {
     <input class="input" id="tmName" placeholder="Contoh: Hendra Rusdianto" value="${t ? h(t.display_name || '') : ''}" oninput="tmFormPreview()">
     <div style="font-size:10.5px;color:#94a3b8;margin-top:5px;line-height:1.5;">
       Boleh disamarkan kalau pelanggan tidak mau nama penuhnya muncul.
-      Website memakai inisialnya sebagai avatar bulat.
     </div>
 
     <div style="height:12px;"></div>
@@ -8638,6 +8745,7 @@ async function tmTogglePublished(id) {
       .eq('id', id).select().single();
     if (error) { console.error(error); toast('Gagal memperbarui', 'error'); return; }
     Object.assign(t, data);
+    tmRenderRules();
     tmRenderList();
     costSyncSectionTabs();
     toast(next ? '✓ Sudah tayang di website' : '✓ Sudah ditarik dari website');
@@ -8673,6 +8781,343 @@ async function tmRemove(id) {
     tmRenderList();
     costSyncSectionTabs();
     toast('✓ Ulasan dihapus');
+  } catch (e) { console.error(e); toast('Gagal menghapus', 'error'); }
+}
+
+// ════════════════════════════════════════════════════════════════
+//  v1.0.78 — LINK ULASAN UNTUK PELANGGAN & ATURAN TAMPIL
+//
+//  Alurnya:
+//   1. "Buat Link Ulasan" → baris baru di review_requests (kode acak unik).
+//   2. Link https://<domain>/ulasan?t=<kode> dikirim ke pelanggan lewat WA.
+//   3. Pelanggan mengisi bintang + ulasan di halaman ulasan.html (repo web).
+//      Database (fungsi ulasan_kirim) memasukkannya ke testimonials dengan
+//      source = 'link', lalu link-nya mati (sekali pakai, berlaku 60 hari).
+//   4. Ulasan baru muncul di daftar "Semua ulasan" dan BELUM tayang, kecuali
+//      "Tayang otomatis" dinyalakan dan bintangnya memenuhi syarat.
+//  Aturan tampil disimpan di review_settings dan diterapkan oleh fungsi
+//  database ulasan_publik() yang dibaca website — tmLiveList() di atas
+//  adalah salinan rumusnya untuk pratinjau di sini.
+// ════════════════════════════════════════════════════════════════
+let rrStore = [];        // review_requests
+let rsSettings = null;   // review_settings (satu baris milik proconlite)
+let rrReady = false;     // false = tabel belum ada / gagal dimuat
+const RS_DEFAULT = { min_rating: 4, max_tampil: 12, urutan: 'terbaru', auto_publish: false, auto_min_rating: 5 };
+
+function rsGet() {
+  const r = Object.assign({}, RS_DEFAULT, rsSettings || {});
+  r.min_rating = Number(r.min_rating); r.max_tampil = Number(r.max_tampil); r.auto_min_rating = Number(r.auto_min_rating);
+  // Sebelum database siap, pratinjau mengikuti perilaku lama website (semua yang tayang).
+  if (!rrReady) { r.min_rating = 0; r.max_tampil = 999; r.urutan = 'terbaru'; }
+  return r;
+}
+
+async function rrLoadAll() {
+  if (!cpEnabled()) return;
+  try {
+    const [{ data: rr, error: e1 }, { data: rs, error: e2 }] = await Promise.all([
+      _sb.from('review_requests').select('*').eq('user_id', CP_OWNER).order('created_at', { ascending: false }),
+      _sb.from('review_settings').select('*').eq('user_id', CP_OWNER).maybeSingle(),
+    ]);
+    if (e1 || e2) { console.warn('rrLoadAll:', e1 || e2); rrReady = false; }
+    else { rrStore = rr || []; rsSettings = rs || null; rrReady = true; }
+  } catch (e) { console.warn('rrLoadAll:', e); rrReady = false; }
+  tmRenderRules();
+  rrRenderList();
+  tmRenderList();
+}
+
+function rrUrl(r) { return `https://${WEBSITE_DOMAIN}/ulasan?t=${encodeURIComponent(r.token)}`; }
+function rrStatus(r) {
+  if (r.used_at) return 'done';
+  if (r.expires_at && new Date(r.expires_at) < new Date()) return 'exp';
+  return 'wait';
+}
+function rrWaText(r) {
+  const prod = r.product === 'panel' ? 'Panel Lantai BRICON' : 'Bata Ringan BRICON';
+  const sapa = r.customer_name ? ` ${r.customer_name}` : '';
+  return `Halo${sapa}, terima kasih sudah order ${prod} di Bricon Partner 🙏\n\n` +
+    `Boleh minta waktunya 1 menit untuk kasih ulasan? Cukup pilih bintang dan tulis sedikit pengalamannya di link ini:\n` +
+    `${rrUrl(r)}\n\nUlasannya sangat membantu kami melayani lebih baik. Terima kasih!`;
+}
+
+// ── Aturan tampil ────────────────────────────────────────────
+function tmRenderRules() {
+  const box = document.getElementById('tmRules');
+  if (!box) return;
+  if (!rrReady) {
+    box.innerHTML = `<div class="tm-rules"><div class="tm-rules-note" style="margin-top:0">Aturan tampil &amp; link ulasan belum aktif — database belum diperbarui. Untuk sementara website menampilkan semua ulasan yang tayang, yang terbaru di depan.</div></div>`;
+    return;
+  }
+  const rs = rsGet();
+  const opt = (vals, cur, fmt) => vals.map(v => `<option value="${v}"${Number(cur) === Number(v) ? ' selected' : ''}>${fmt(v)}</option>`).join('');
+  const nLive = tmLiveList().length;
+  box.innerHTML = `<div class="tm-rules">
+    <div class="tm-rules-head">
+      <span class="t">Aturan tampil di website</span>
+      <span class="live">${nLive} ulasan tampil</span>
+    </div>
+    <div class="tm-rules-grid">
+      <div>
+        <label class="k">Minimal bintang</label>
+        <select class="input" onchange="rsSave({ min_rating: parseFloat(this.value) })">
+          ${opt([1, 2, 3, 3.5, 4, 4.5, 5], rs.min_rating, v => `${tmRatingText(v)} ke atas`)}
+        </select>
+      </div>
+      <div>
+        <label class="k">Jumlah maksimal</label>
+        <select class="input" onchange="rsSave({ max_tampil: parseInt(this.value, 10) })">
+          ${opt([3, 6, 9, 12, 20, 30], rs.max_tampil, v => `${v} ulasan`)}
+        </select>
+      </div>
+      <div class="full">
+        <label class="k">Urutan</label>
+        <select class="input" onchange="rsSave({ urutan: this.value })">
+          <option value="terbaru"${rs.urutan === 'terbaru' ? ' selected' : ''}>Terbaru di depan</option>
+          <option value="bintang"${rs.urutan === 'bintang' ? ' selected' : ''}>Bintang tertinggi di depan</option>
+        </select>
+      </div>
+      <label class="cp-checkline full">
+        <input type="checkbox" ${rs.auto_publish ? 'checked' : ''} onchange="rsSave({ auto_publish: this.checked })">
+        <span>
+          <span class="t">Tayang otomatis</span>
+          <span class="s">Ulasan dari link langsung tampil kalau pelanggan mengizinkan dan bintangnya minimal
+            <select onclick="event.stopPropagation()" onchange="rsSave({ auto_min_rating: parseFloat(this.value) })" style="font:inherit;font-weight:700;border:1px solid #e2e8f0;border-radius:6px;padding:1px 4px;background:#fff;">
+              ${opt([3, 4, 4.5, 5], rs.auto_min_rating, v => tmRatingText(v))}
+            </select>. Kalau mati, semua ulasan menunggu kamu pilih dulu.</span>
+        </span>
+      </label>
+    </div>
+    <div class="tm-rules-note">Ulasan yang disematkan ("Jadikan kartu besar") selalu paling depan. Perubahan aturan langsung berlaku di website.</div>
+  </div>`;
+}
+
+async function rsSave(patch) {
+  if (!rrReady) return;
+  const next = Object.assign({}, rsGet(), rsSettings || {}, patch, { user_id: CP_OWNER, updated_at: new Date().toISOString() });
+  const row = {
+    user_id: CP_OWNER, min_rating: next.min_rating, max_tampil: next.max_tampil, urutan: next.urutan,
+    auto_publish: !!next.auto_publish, auto_min_rating: next.auto_min_rating, updated_at: next.updated_at,
+  };
+  try {
+    const { data, error } = await _sb.from('review_settings').upsert(row).select().single();
+    if (error) { console.error(error); toast('Gagal menyimpan aturan', 'error'); tmRenderRules(); return; }
+    rsSettings = data;
+    tmRenderRules();
+    tmRenderList();
+    toast('✓ Aturan tersimpan — website ikut berubah');
+  } catch (e) { console.error(e); toast('Gagal menyimpan aturan', 'error'); }
+}
+
+// ── Sematkan satu ulasan jadi kartu besar ────────────────────
+async function tmTogglePin(id) {
+  const t = tmStore.find(x => x.id === id);
+  if (!t) return;
+  const next = !t.is_pinned;
+  try {
+    if (next) {
+      const others = tmStore.filter(x => x.is_pinned && x.id !== id).map(x => x.id);
+      if (others.length) {
+        const { error } = await _sb.from('testimonials').update({ is_pinned: false }).in('id', others);
+        if (error) { console.error(error); toast('Gagal memperbarui', 'error'); return; }
+        tmStore.forEach(x => { if (others.includes(x.id)) x.is_pinned = false; });
+      }
+    }
+    const { data, error } = await _sb.from('testimonials')
+      .update({ is_pinned: next, updated_at: new Date().toISOString() }).eq('id', id).select().single();
+    if (error) { console.error(error); toast('Gagal memperbarui', 'error'); return; }
+    Object.assign(t, data);
+    tmRenderRules();
+    tmRenderList();
+    toast(next ? '✓ Jadi kartu besar di website' : '✓ Sematan dilepas');
+  } catch (e) { console.error(e); toast('Gagal memperbarui', 'error'); }
+}
+
+// ── Daftar link ──────────────────────────────────────────────
+const RR_SVG_WA = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.08 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35M12.05 21.5h-.01a9.4 9.4 0 0 1-4.8-1.31l-.34-.2-3.57.93.95-3.48-.22-.36a9.4 9.4 0 0 1-1.44-5.02c0-5.2 4.23-9.43 9.44-9.43a9.38 9.38 0 0 1 9.43 9.44c0 5.2-4.23 9.43-9.44 9.43M20.08 3.9A11.3 11.3 0 0 0 12.05.6C5.8.6.7 5.7.7 11.96c0 2 .52 3.95 1.52 5.67L.6 23.4l5.9-1.55a11.3 11.3 0 0 0 5.54 1.41h.01c6.25 0 11.35-5.1 11.35-11.36 0-3.03-1.18-5.88-3.32-8.02"/></svg>';
+const RR_SVG_COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+const RR_SVG_DEL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>';
+
+function rrRenderList() {
+  const box = document.getElementById('rrList');
+  if (!box) return;
+  if (!rrReady) { box.innerHTML = ''; return; }
+  // Yang sudah diisi cukup ditampilkan 14 hari terakhir supaya daftar tidak memanjang.
+  const batas = Date.now() - 14 * 86400000;
+  const list = rrStore.filter(r => !r.used_at || new Date(r.used_at).getTime() > batas);
+  if (!list.length) {
+    box.innerHTML = `<div class="plog-empty" style="padding:14px 12px;">Belum ada link yang menunggu. Buat satu untuk pelanggan yang barusan closing.</div>`;
+    return;
+  }
+  const lbl = { wait: 'Menunggu', done: 'Sudah diisi', exp: 'Kedaluwarsa' };
+  box.innerHTML = list.map(r => {
+    const st = rrStatus(r);
+    const dt = new Date(r.created_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'short' });
+    const sub = [cpProdLabel(r.product || 'bata'), r.kabupaten || '', `dibuat ${dt}`].filter(Boolean).join(' · ');
+    return `<div class="rr-item">
+      <div class="rr-main">
+        <div class="rr-name">${h(r.customer_name || '—')}</div>
+        <div class="rr-sub">${h(sub)}</div>
+      </div>
+      <span class="rr-tag ${st}">${lbl[st]}</span>
+      ${st === 'wait' ? `
+        <button class="rr-btn wa" title="Kirim lewat WhatsApp" aria-label="Kirim lewat WhatsApp" onclick="rrSendWa(${r.id})">${RR_SVG_WA}</button>
+        <button class="rr-btn" title="Salin link" aria-label="Salin link" onclick="rrCopy(${r.id})">${RR_SVG_COPY}</button>` : ''}
+      ${st !== 'done' ? `<button class="rr-btn del" title="Hapus link" aria-label="Hapus link" onclick="rrRemove(${r.id})">${RR_SVG_DEL}</button>` : ''}
+    </div>`;
+  }).join('');
+}
+
+// ── Buat link baru ───────────────────────────────────────────
+let rrPickedInquiry = null;
+
+function rrOpenCreate() {
+  if (!rrReady) { toast('Database untuk link ulasan belum siap', 'error'); return; }
+  rrPickedInquiry = null;
+  const sudahAdaLink = new Set(rrStore.map(r => r.inquiry_id).filter(Boolean));
+  const closings = ilStore
+    .filter(e => ilNormStatus(e.status) === 'closing')
+    .slice()
+    .sort((a, b) => new Date(b.ts) - new Date(a.ts));
+  const opts = closings.map(e => {
+    const nm = e.customer_name || '(tanpa nama)';
+    const kb = cpBareName(e.kabupaten || '') || '—';
+    const dt = new Date(e.ts).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+    return `<option value="${e.id}">${sudahAdaLink.has(e.id) ? '✓ ' : ''}${h(nm)} · ${h(kb)} · ${h(dt)}</option>`;
+  }).join('');
+
+  costModal(`
+    <div class="cost-modal-title">Buat Link Ulasan</div>
+    <div class="cost-modal-sub">Pelanggan cukup membuka link, memilih bintang, dan menulis ulasannya sendiri. Satu link untuk satu ulasan, berlaku 60 hari.</div>
+
+    <label class="cost-modal-label">Pilih Pelanggan yang Sudah Closing</label>
+    <select class="input" id="rrInquiry" onchange="rrPick(this.value)">
+      <option value="">— isi manual saja —</option>
+      ${opts}
+    </select>
+    <div style="font-size:10.5px;color:#94a3b8;margin-top:5px;line-height:1.5;">
+      ${closings.length ? 'Tanda ✓ = pelanggan itu sudah pernah dibuatkan link.' : 'Belum ada catatan berstatus Closing — isi manual dulu.'}
+    </div>
+
+    <div style="height:12px;"></div>
+    <label class="cost-modal-label">Nama Pelanggan</label>
+    <input class="input" id="rrName" placeholder="Contoh: Pak Hendra">
+    <div style="font-size:10.5px;color:#94a3b8;margin-top:5px;">Dipakai untuk menyapa di halaman ulasan. Pelanggan bisa mengganti nama yang tampil.</div>
+
+    <div style="height:12px;"></div>
+    <label class="cost-modal-label">Nomor WhatsApp</label>
+    <input class="input" id="rrPhone" inputmode="tel" placeholder="08xxxxxxxxxx">
+
+    <div style="height:12px;"></div>
+    <div class="il-region-row">
+      <div class="il-region-col">
+        <label class="cost-modal-label">Lokasi</label>
+        <input class="input" id="rrKab" placeholder="Sidoarjo — Waru">
+      </div>
+      <div class="il-region-col">
+        <label class="cost-modal-label">Produk</label>
+        <select class="input" id="rrProduct">
+          <option value="bata" selected>Bata Ringan</option>
+          <option value="panel">Panel Lantai</option>
+        </select>
+      </div>
+    </div>
+    <div style="font-size:10.5px;color:#94a3b8;margin-top:5px;line-height:1.5;">Lokasi ikut tampil di kartu ulasan website, format <b>kota/kabupaten — kecamatan</b>.</div>
+
+    <div class="cost-modal-actions">
+      <button class="cost-btn" onclick="costCloseModal()">Batal</button>
+      <button class="cost-btn primary" id="rrCreateBtn" onclick="rrCreate()">Buat Link</button>
+    </div>
+  `);
+}
+
+function rrPick(idStr) {
+  const id = parseInt(idStr, 10);
+  const e = id ? ilStore.find(x => x.id === id) : null;
+  rrPickedInquiry = e ? id : null;
+  if (!e) return;
+  const set = (elId, v) => { const el = document.getElementById(elId); if (el) el.value = v; };
+  set('rrName', e.customer_name || '');
+  set('rrPhone', e.customer_phone || '');
+  const kab = cpBareName(e.kabupaten || '');
+  const kec = (e.kecamatan || '').trim();
+  set('rrKab', kab && kec ? `${kab} — ${kec}` : (kab || kec));
+  if (e.product === 'bata' || e.product === 'panel') set('rrProduct', e.product);
+}
+
+async function rrCreate() {
+  const val = id => ((document.getElementById(id) || {}).value || '').trim();
+  const name = val('rrName');
+  if (!name) { toast('Nama pelanggan belum diisi', 'error'); return; }
+  const row = {
+    user_id: CP_OWNER,
+    inquiry_id: rrPickedInquiry,
+    customer_name: name,
+    customer_phone: normalizePhone(val('rrPhone')) || null,
+    kabupaten: val('rrKab') || null,
+    product: val('rrProduct') || 'bata',
+  };
+  const btn = document.getElementById('rrCreateBtn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Membuat…'; }
+  try {
+    const { data, error } = await _sb.from('review_requests').insert(row).select().single();
+    if (error) { console.error(error); toast('Gagal membuat link', 'error'); if (btn) { btn.disabled = false; btn.textContent = 'Buat Link'; } return; }
+    rrStore.unshift(data);
+    rrRenderList();
+    rrShowReady(data);
+  } catch (e) {
+    console.error(e); toast('Gagal membuat link', 'error');
+    if (btn) { btn.disabled = false; btn.textContent = 'Buat Link'; }
+  }
+}
+
+function rrShowReady(r) {
+  costModal(`
+    <div class="cost-modal-title">Link Siap Dikirim</div>
+    <div class="cost-modal-sub">Untuk ${h(r.customer_name)}. Link ini cuma bisa dipakai sekali.</div>
+    <label class="cost-modal-label">Link</label>
+    <div class="rr-linkbox">${h(rrUrl(r))}</div>
+    <div style="height:10px;"></div>
+    <label class="cost-modal-label">Pesan WhatsApp</label>
+    <div class="rr-msg">${h(rrWaText(r))}</div>
+    <div class="cost-modal-actions">
+      <button class="cost-btn" onclick="rrCopy(${r.id}, true)">Salin Pesan</button>
+      <button class="cost-btn primary" onclick="rrSendWa(${r.id})">${r.customer_phone ? 'Kirim lewat WhatsApp' : 'Buka WhatsApp'}</button>
+    </div>
+  `);
+}
+
+function rrSendWa(id) {
+  const r = rrStore.find(x => x.id === id);
+  if (!r) return;
+  const text = encodeURIComponent(rrWaText(r));
+  // Tanpa nomor, WhatsApp membuka daftar kontak supaya kamu bisa memilih sendiri.
+  const url = r.customer_phone ? `https://wa.me/${normalizePhone(r.customer_phone)}?text=${text}` : `https://wa.me/?text=${text}`;
+  window.open(url, '_blank');
+}
+
+async function rrCopy(id, fullMessage) {
+  const r = rrStore.find(x => x.id === id);
+  if (!r) return;
+  const text = fullMessage ? rrWaText(r) : rrUrl(r);
+  try {
+    await navigator.clipboard.writeText(text);
+    toast(fullMessage ? '✓ Pesan disalin' : '✓ Link disalin');
+  } catch (e) {
+    window.prompt('Salin teks ini:', text);
+  }
+}
+
+async function rrRemove(id) {
+  const r = rrStore.find(x => x.id === id);
+  if (!r) return;
+  if (!confirm(`Hapus link ulasan untuk ${r.customer_name}?\nKalau link-nya sudah terkirim, pelanggan tidak bisa membukanya lagi.`)) return;
+  try {
+    const { error } = await _sb.from('review_requests').delete().eq('id', id);
+    if (error) { console.error(error); toast('Gagal menghapus', 'error'); return; }
+    rrStore = rrStore.filter(x => x.id !== id);
+    rrRenderList();
+    toast('✓ Link dihapus');
   } catch (e) { console.error(e); toast('Gagal menghapus', 'error'); }
 }
 
