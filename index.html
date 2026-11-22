@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Invoice Generator · v1.0.78</title>
-<!-- v1.0.78 -->
+<title>Invoice Generator · v1.0.79</title>
+<!-- v1.0.79 -->
 <meta name="description" content="Aplikasi pembuat invoice bata ringan & panel lantai multi-brand">
 <meta name="theme-color" content="#0e9e4a">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1085,6 +1085,42 @@
   /* v1.0.58: badge status pindah ke pojok kanan bawah, sebaris dengan harga */
   .il-item-price-row { margin-top: 7px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
   .il-contact-phones { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+  /* ═══════ v1.0.79: WA mati & nomor dobel ═══════ */
+  .wa-flag {
+    display: inline-flex; align-items: center; gap: 4px; vertical-align: middle;
+    font-size: 9.5px; font-weight: 800; letter-spacing: .02em; border-radius: 999px; padding: 2px 8px;
+    margin-left: 6px; white-space: nowrap;
+  }
+  .wa-flag.dead { background: #fee2e2; color: #b91c1c; }
+  .wa-flag.dup  { background: #e0e7ff; color: #3730a3; }
+  .wa-flag.repeat { background: #dcfce7; color: #0a7a38; }
+  .wa-dead-row { opacity: .72; }
+  .wa-box {
+    border-radius: 10px; padding: 9px 11px; margin-top: 10px; font-size: 11.5px; line-height: 1.55;
+  }
+  .wa-box.dead { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+  .wa-box.dup  { background: #eef2ff; border: 1px solid #c7d2fe; color: #312e81; }
+  .wa-box b { font-weight: 800; }
+  .wa-box .wa-link { color: inherit; text-decoration: underline; font-weight: 700; cursor: pointer; background: none; border: none; padding: 0; font: inherit; }
+  .wa-dup-list { margin-top: 6px; display: flex; flex-direction: column; gap: 4px; }
+  .wa-dup-item {
+    display: flex; align-items: center; gap: 8px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px;
+    padding: 6px 9px; cursor: pointer; text-align: left; font: inherit; color: #0f172a; width: 100%;
+  }
+  .wa-dup-item .d { font-size: 10.5px; color: #64748b; flex: 1; min-width: 0; }
+  .wa-dup-item .n { font-size: 11.5px; font-weight: 700; }
+  .wa-toggle {
+    margin-top: 8px; border: 1px solid #fecaca; background: #fff; color: #b91c1c; border-radius: 8px;
+    font-size: 11px; font-weight: 700; padding: 6px 10px; cursor: pointer;
+  }
+  .wa-toggle.on { border-color: #bbf7d0; color: #0a7a38; }
+  .wa-review { margin-bottom: 12px; }
+  .wa-review-head { font-size: 12px; font-weight: 800; color: #0f172a; margin-bottom: 2px; }
+  .wa-review-sub { font-size: 10.5px; color: #94a3b8; line-height: 1.5; margin-bottom: 8px; }
+  .wa-group { border: 1px solid #e2e8f0; border-radius: 11px; padding: 9px 11px; margin-bottom: 7px; background: #fff; }
+  .wa-group.suspect { border-color: #c7d2fe; background: #f8faff; }
+  .wa-group-top { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 12px; font-weight: 800; color: #0f172a; }
+  .wa-group-top .ph { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #475569; font-size: 11px; }
   .il-contact-phones .tag {
     font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 999px;
     font-family: 'JetBrains Mono', monospace;
@@ -2095,7 +2131,7 @@
     </div>
     <div class="min-w-0">
       <div class="text-[14px] font-bold text-slate-900 truncate leading-tight">Invoice Generator</div>
-      <div class="text-[10px] text-slate-400 truncate leading-tight" id="appVersionLabel">v1.0.78</div>
+      <div class="text-[10px] text-slate-400 truncate leading-tight" id="appVersionLabel">v1.0.79</div>
     </div>
   </div>
 
@@ -2660,6 +2696,7 @@
       <div data-csec="kontak">
         <div class="cost-card" id="ilContactsCard">
           <div class="cost-card-title">Kontak Pernah Closing</div>
+          <div id="waReviewBox"></div>
           <div id="ilContactsList"></div>
         </div>
       </div>
@@ -3217,7 +3254,7 @@ const USER_PP_MAP = {
 // ════════════════════════════════════════════════════════════════
 //  CONSTANTS
 // ════════════════════════════════════════════════════════════════
-const APP_VERSION = '1.0.78';
+const APP_VERSION = '1.0.79';
 
 // v1.0.77: SATU-SATUNYA tempat domain website. Domain lama sudah disuspend
 // (11 Nov 2026) dan tidak boleh muncul lagi; kalau ganti domain lagi,
@@ -5011,6 +5048,7 @@ function checkOpenInquiryForCustomer() {
   toast(`💬 ${hit.customer_name || 'Customer ini'} masih berstatus "Nanya" di Tanya Harga — mau dijadiin Closing?`, 'info');
 }
 
+let _lastDeadWarn = null;
 function onPhoneInput() {
   updatePhonePreview();
   updatePreview();
@@ -5020,6 +5058,12 @@ function onPhoneInput() {
   // langsung tahu untungnya sebelum invoice disimpan.
   const phones = invoicePhones();
   if (!phones.some(p => phoneKey(p).length >= 11)) { _lastPhoneHit = null; checkModalTrackable(); return; }
+  // v1.0.79: peringatan nomor yang sudah ditandai tidak bisa dihubungi
+  const deadP = phones.find(p => phoneKey(p).length >= 11 && waIsDead(p));
+  if (deadP && _lastDeadWarn !== waTail(deadP)) {
+    _lastDeadWarn = waTail(deadP);
+    toast('⛔ Nomor WA ini sudah ditandai tidak bisa dihubungi — cek lagi nomornya', 'error');
+  }
   const inq = ilFindByPhone(phones, currentBrand, costProductForMode());
   if (inq && ilModalOf(inq) > 0) {
     if (_lastPhoneHit !== inq.id) {
@@ -5609,6 +5653,7 @@ async function ilLoadAll() {
     ilStore = rows || [];
     ilRestrictions = rest || [];
     ilFactoryPrices = fprice || [];
+    await waLoad();                 // v1.0.79: tanda nomor WA tidak aktif
     ilState.loaded = true;
     ilRenderAll();
   } catch (e) { console.error('ilLoadAll:', e); }
@@ -5909,7 +5954,8 @@ function ilOpenAdd() {
 
     <div style="height:10px;"></div>
     <label class="cost-modal-label">No WA Customer (opsional)</label>
-    <input class="input" id="ilCustPhone" placeholder="08xxxxxxxxxx" inputmode="tel">
+    <input class="input" id="ilCustPhone" placeholder="08xxxxxxxxxx" inputmode="tel" oninput="waCheckNewPhone(this.value)">
+    <div id="ilPhoneAlerts"></div>
 
     <div style="height:10px;"></div>
     <label class="cost-modal-label">Asal Lead (opsional — buat menghitung ROI iklan)</label>
@@ -5967,6 +6013,13 @@ function ilOpenAdd() {
     ilRenderFormAlerts();
   });
   ilComboRegister('ilDesa', [], () => ilRenderFormAlerts());
+}
+
+// v1.0.79: begitu nomor di form tambah catatan lengkap, langsung kasih tahu
+// kalau nomornya sudah ada di catatan lain atau sudah ditandai tidak aktif.
+function waCheckNewPhone(v) {
+  const box = document.getElementById('ilPhoneAlerts');
+  if (box) box.innerHTML = waInfoBoxHtml(v, null);
 }
 
 function ilRenderFormAlerts() {
@@ -6033,6 +6086,18 @@ async function ilSaveNew() {
   const isBataForm = costState.product === 'bata';
   const margin = ilRpVal('ilMargin');
   const note = (document.getElementById('ilNote') || {}).value?.trim() || '';
+
+  // v1.0.79: cegah catatan dobel — nomor sama, merek+produk sama, masih Nanya.
+  if (custPhone && phoneKey(custPhone).length >= 11) {
+    const open = ilStore.filter(x => x.customer_phone && samePhone(x.customer_phone, custPhone)
+      && x.brand === costState.brand && x.product === costState.product && ilNormStatus(x.status) === 'nanya');
+    if (open.length) {
+      const o = open[0];
+      const dt = new Date(o.ts).toLocaleDateString('id-ID', { day: '2-digit', month: 'short' });
+      if (!confirm(`Nomor ini sudah punya catatan "Nanya" yang masih terbuka:\n${o.customer_name || 'Tanpa nama'} · ${cpBareName(o.kabupaten || '') || '—'} · ${dt}\n\nKalau orang & proyeknya sama, tekan Batal lalu buka catatan lama itu.\nTetap buat catatan BARU?`)) return;
+    }
+    if (waIsDead(custPhone) && !confirm('Nomor ini sudah ditandai TIDAK BISA DIHUBUNGI. Tetap simpan dengan nomor ini?')) return;
+  }
 
   const row = {
     user_id: uid, brand: costState.brand, product: costState.product,
@@ -6133,8 +6198,10 @@ function ilOpenDetail(id, editMode) {
     ${e.customer_phone ? `
     <div class="il-detail-row">
       <span class="il-detail-lbl">No WA</span>
-      <span class="il-detail-val">${h(e.customer_phone)}</span>
-    </div>` : ''}
+      <span class="il-detail-val">${h(e.customer_phone)}${waDeadBadge(e.customer_phone)}</span>
+    </div>
+    ${waInfoBoxHtml(e.customer_phone, e.id)}
+    ${waReady ? `<button type="button" class="wa-toggle${waIsDead(e.customer_phone) ? ' on' : ''}" onclick="waToggleDead('${h(e.customer_phone)}', ${e.id})">${waIsDead(e.customer_phone) ? 'Tandai WA aktif lagi' : 'Tandai WA tidak bisa dihubungi'}</button>` : ''}` : ''}
     ${e.source ? `
     <div class="il-detail-row">
       <span class="il-detail-lbl">Asal Lead</span>
@@ -6426,6 +6493,7 @@ async function ilRemove(id) {
 }
 
 function ilOpenWa(phone) {
+  if (waIsDead(phone) && !confirm('Nomor ini sudah ditandai TIDAK BISA DIHUBUNGI.\nTetap buka WhatsApp?')) return;
   window.open(`https://wa.me/${normalizePhone(phone)}`, '_blank');
 }
 
@@ -6638,6 +6706,165 @@ function ilCopyEntry(id) {
   );
 }
 
+// ════════════════════════════════════════════════════════════════
+//  v1.0.79 — TANDA "WA TIDAK BISA DIHUBUNGI" & DETEKSI NOMOR DOBEL
+//
+//  • Tanda WA mati disimpan per NOMOR (tabel wa_status, kunci = 9 digit
+//    terakhir — aturan yang sama dengan samePhone()), bukan per catatan.
+//    Jadi sekali ditandai, semua catatan, kontak, dan invoice dengan nomor
+//    itu ikut kelihatan merahnya.
+//  • Nomor dobel = satu nomor WA punya lebih dari satu catatan Tanya Harga.
+//    Belum tentu salah: bisa order ulang (contoh Ibu Asriani, 3 & 15 Agustus).
+//    Yang dianggap "kemungkinan dobel" = sama-sama masih Nanya untuk merek &
+//    produk yang sama, atau dibuat berselisih ≤ 2 hari. Data TIDAK dihapus
+//    otomatis — kamu yang memutuskan lewat detail catatan.
+// ════════════════════════════════════════════════════════════════
+let waDeadMap = new Map();   // phone_tail -> baris wa_status
+let waReady = false;
+
+async function waLoad() {
+  if (!currentUser) return;
+  try {
+    const { data, error } = await _sb.from('wa_status').select('*').eq('user_id', currentUser.id);
+    if (error) { console.warn('waLoad:', error); waReady = false; return; }
+    waDeadMap = new Map((data || []).map(r => [r.phone_tail, r]));
+    waReady = true;
+  } catch (e) { console.warn('waLoad:', e); waReady = false; }
+}
+
+function waTail(p) { const k = phoneKey(p); return k.length >= 9 ? k.slice(-9) : ''; }
+function waIsDead(p) { const t = waTail(p); return !!(t && waDeadMap.has(t)); }
+function waDeadBadge(p) { return waIsDead(p) ? '<span class="wa-flag dead">WA tidak aktif</span>' : ''; }
+
+// Semua catatan lain yang memakai nomor yang sama (lintas merek/produk).
+function waSamePhoneEntries(e) {
+  if (!e || !e.customer_phone) return [];
+  return ilStore.filter(x => x.id !== e.id && x.customer_phone && samePhone(x.customer_phone, e.customer_phone))
+    .sort((a, b) => new Date(b.ts) - new Date(a.ts));
+}
+
+// Dua catatan dengan nomor sama dianggap "kemungkinan dobel" kalau:
+// sama-sama Nanya untuk merek+produk yang sama, ATAU dibuat berselisih ≤ 2 hari.
+function waLooksDuplicate(a, b) {
+  const sameKind = a.brand === b.brand && a.product === b.product;
+  if (sameKind && ilNormStatus(a.status) === 'nanya' && ilNormStatus(b.status) === 'nanya') return true;
+  return sameKind && Math.abs(new Date(a.ts) - new Date(b.ts)) <= 2 * 86400000;
+}
+
+function waDupBadge(e) {
+  const others = waSamePhoneEntries(e);
+  if (!others.length) return '';
+  const suspect = others.some(o => waLooksDuplicate(e, o));
+  if (suspect) return `<span class="wa-flag dup">Kemungkinan dobel</span>`;
+  const closings = [e, ...others].filter(x => ilNormStatus(x.status) === 'closing').length;
+  return closings >= 2
+    ? `<span class="wa-flag repeat">Order ke-${closings}</span>`
+    : `<span class="wa-flag dup">${others.length + 1}× nomor ini</span>`;
+}
+
+function waEntryLine(x) {
+  const dt = new Date(x.ts).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+  const where = cpBareName(x.kabupaten || '') || '—';
+  const brand = (typeof COST_BRAND_LABEL !== 'undefined' && COST_BRAND_LABEL[x.brand]) || x.brand || '';
+  const prod = x.product === 'panel' ? 'Panel' : 'Bata';
+  return `<button type="button" class="wa-dup-item" onclick="ilOpenDetail(${x.id}, false)">
+    <span class="n">${h(x.customer_name || 'Tanpa nama')}</span>
+    <span class="d">${h(where)} · ${h(brand)} ${prod} · ${dt}</span>
+    ${ilBadgeHtml(x.status)}
+  </button>`;
+}
+
+// Kotak info di detail catatan & form tambah: status WA + catatan lain bernomor sama.
+function waInfoBoxHtml(phone, selfId) {
+  if (!phone || phoneKey(phone).length < 11) return '';
+  let html = '';
+  if (waIsDead(phone)) {
+    const r = waDeadMap.get(waTail(phone));
+    const dt = r && r.marked_at ? new Date(r.marked_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) : '';
+    html += `<div class="wa-box dead">⛔ Nomor ini sudah ditandai <b>tidak bisa dihubungi</b>${dt ? ` sejak ${dt}` : ''}.${r && r.note ? ` Catatan: ${h(r.note)}` : ''} Minta nomor baru kalau customer ini muncul lagi.</div>`;
+  }
+  const others = ilStore.filter(x => x.id !== selfId && x.customer_phone && samePhone(x.customer_phone, phone))
+    .sort((a, b) => new Date(b.ts) - new Date(a.ts));
+  if (others.length) {
+    html += `<div class="wa-box dup">Nomor ini sudah ada di <b>${others.length} catatan lain</b>. Kalau itu orang & proyek yang sama, buka catatan lamanya saja supaya tidak dobel:
+      <div class="wa-dup-list">${others.slice(0, 5).map(waEntryLine).join('')}</div>
+    </div>`;
+  }
+  return html;
+}
+
+async function waToggleDead(phone, reopenId) {
+  if (!waReady) { toast('Database untuk tanda WA belum siap', 'error'); return; }
+  const tail = waTail(phone);
+  if (!tail) return;
+  const uid = currentUser ? currentUser.id : null;
+  try {
+    if (waDeadMap.has(tail)) {
+      if (!confirm(`Tandai ${phone} AKTIF lagi (bisa dihubungi)?`)) return;
+      const { error } = await _sb.from('wa_status').delete().eq('user_id', uid).eq('phone_tail', tail);
+      if (error) { console.error(error); toast('Gagal memperbarui', 'error'); return; }
+      waDeadMap.delete(tail);
+      toast('✓ Nomor ditandai aktif lagi');
+    } else {
+      const note = prompt(`Tandai ${phone} TIDAK BISA DIHUBUNGI.\nAlasan singkat (boleh dikosongkan), mis. "centang satu terus", "nomor tidak terdaftar":`, '');
+      if (note === null) return;
+      const { data, error } = await _sb.from('wa_status')
+        .upsert({ user_id: uid, phone_tail: tail, phone: normalizePhone(phone), status: 'mati', note: note.trim() || null, marked_at: new Date().toISOString() },
+                { onConflict: 'user_id,phone_tail' })
+        .select().single();
+      if (error) { console.error(error); toast('Gagal menandai', 'error'); return; }
+      waDeadMap.set(tail, data);
+      toast('✓ Nomor ditandai tidak bisa dihubungi');
+    }
+    ilRenderAll();
+    if (reopenId) ilOpenDetail(reopenId, false);
+  } catch (e) { console.error(e); toast('Gagal memperbarui', 'error'); }
+}
+
+// Panel ringkas di tab Kontak: nomor dengan lebih dari satu catatan + nomor mati.
+function waRenderReview() {
+  const box = document.getElementById('waReviewBox');
+  if (!box) return;
+  const groups = {};
+  ilStore.forEach(e => {
+    const t = waTail(e.customer_phone);
+    if (t) (groups[t] = groups[t] || []).push(e);
+  });
+  const multi = Object.keys(groups).filter(t => groups[t].length > 1).map(t => {
+    const list = groups[t].sort((a, b) => new Date(b.ts) - new Date(a.ts));
+    let suspect = false;
+    for (let i = 0; i < list.length && !suspect; i++)
+      for (let j = i + 1; j < list.length; j++) if (waLooksDuplicate(list[i], list[j])) { suspect = true; break; }
+    return { tail: t, list, suspect };
+  }).sort((a, b) => (b.suspect - a.suspect) || (new Date(b.list[0].ts) - new Date(a.list[0].ts)));
+  const deadCount = waDeadMap.size;
+
+  if (!multi.length && !deadCount) { box.innerHTML = ''; return; }
+  const nSuspect = multi.filter(g => g.suspect).length;
+  box.innerHTML = `<div class="wa-review">
+    <div class="wa-review-head">Cek nomor WA</div>
+    <div class="wa-review-sub">
+      ${multi.length ? `${multi.length} nomor dipakai di lebih dari satu catatan${nSuspect ? `, <b style="color:#3730a3">${nSuspect} kemungkinan dobel</b>` : ''}. Yang berlabel "Order ke-…" adalah order ulang yang wajar.` : ''}
+      ${deadCount ? `${multi.length ? '<br>' : ''}${deadCount} nomor ditandai tidak bisa dihubungi.` : ''}
+      Ketuk catatannya untuk membuka, mengedit, atau menghapus yang dobel.
+    </div>
+    ${multi.map(g => {
+      const head = g.list[0];
+      const closings = g.list.filter(x => ilNormStatus(x.status) === 'closing').length;
+      return `<div class="wa-group${g.suspect ? ' suspect' : ''}">
+        <div class="wa-group-top">
+          <span>${h(head.customer_name || 'Tanpa nama')}</span>
+          <span class="ph">${h(head.customer_phone)}</span>
+          ${g.suspect ? '<span class="wa-flag dup" style="margin-left:0">Kemungkinan dobel</span>'
+                      : (closings >= 2 ? `<span class="wa-flag repeat" style="margin-left:0">Order ulang ${closings}×</span>` : '')}
+          ${waIsDead(head.customer_phone) ? '<span class="wa-flag dead" style="margin-left:0">WA tidak aktif</span>' : ''}
+        </div>
+        <div class="wa-dup-list">${g.list.map(waEntryLine).join('')}</div>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
 // ── Kontak yang pernah closing ───────────────────────────────
 // v1.0.58 (#4): satu customer bisa ganti nomor WA di tengah jalan — nanya pakai
 // nomor lama, closing pakai nomor baru. Pengelompokan sekarang berdasarkan NAMA
@@ -6647,10 +6874,21 @@ function ilPhoneTail(p) { return phoneKey(p).slice(-9); }
 
 function ilContactGroups() {
   const withPhone = ilStore.filter(e => e.customer_phone);
+  // v1.0.79: digabung kalau NAMA sama ATAU NOMOR sama — dulu cuma nama, jadi
+  // satu nomor yang namanya ditulis beda ("Ibu Asriani" vs "Bu Asriani")
+  // muncul dua kali di daftar ini.
+  const parent = {};
+  const find = k => (parent[k] === undefined ? (parent[k] = k) : (parent[k] === k ? k : (parent[k] = find(parent[k]))));
+  const union = (a, b) => { const ra = find(a), rb = find(b); if (ra !== rb) parent[ra] = rb; };
+  withPhone.forEach(e => {
+    const nm = (e.customer_name || '').trim().toLowerCase().replace(/^(bpk\.?|bapak|pak|ibu|bu)\s+/, '');
+    const pk = 'p:' + ilPhoneTail(e.customer_phone);
+    find(pk);
+    if (nm) union('n:' + nm, pk);
+  });
   const buckets = {};
   withPhone.forEach(e => {
-    const nm = (e.customer_name || '').trim().toLowerCase();
-    const key = nm ? 'n:' + nm : 'p:' + ilPhoneTail(e.customer_phone);
+    const key = find('p:' + ilPhoneTail(e.customer_phone));
     (buckets[key] = buckets[key] || []).push(e);
   });
 
@@ -6684,6 +6922,7 @@ function ilRenderContacts() {
   const card = document.getElementById('ilContactsCard');
   const list = document.getElementById('ilContactsList');
   if (!card || !list) return;
+  waRenderReview();                 // v1.0.79
   const groups = ilContactGroups();
   // v1.0.67: kartunya tidak lagi disembunyikan saat kosong — sekarang dia isi
   // satu tab tersendiri, jadi kalau disembunyikan tabnya jadi halaman kosong.
@@ -6697,10 +6936,10 @@ function ilRenderContacts() {
     const suggestedName = ilSuggestContactName(e);
     const initial = (e.customer_name || '?').trim().charAt(0).toUpperCase();
     return `
-      <div class="il-contact-item">
+      <div class="il-contact-item${waIsDead(g.phone) ? ' wa-dead-row' : ''}">
         <div class="il-contact-avatar">${h(initial)}</div>
         <div style="min-width:0;">
-          <div class="il-contact-name">${h(suggestedName)}</div>
+          <div class="il-contact-name">${h(suggestedName)}${waDeadBadge(g.phone)}</div>
           <div class="il-contact-sub">${g.count} kali closing</div>
           ${(g.otherPhones.length || g.closingPhones.length > 1) ? `
           <div class="il-contact-phones">
@@ -6739,7 +6978,7 @@ function ilItemHtml(e) {
         <div class="plog-item-top">
           <span class="plog-item-date">${dateLabel}</span>
         </div>
-        <div class="il-item-name">${e.customer_name ? h(e.customer_name) : '<span class="il-item-name-empty">Belum ada nama</span>'}</div>
+        <div class="il-item-name">${e.customer_name ? h(e.customer_name) : '<span class="il-item-name-empty">Belum ada nama</span>'}${waDeadBadge(e.customer_phone)}${waDupBadge(e)}</div>
         ${lokasi ? `<div class="il-item-addr">${IL_LOC_ICON}<span>${h(lokasi)}</span></div>` : ''}
         <div class="il-item-price-row">
           ${e.sell_price
@@ -8983,7 +9222,7 @@ function rrOpenCreate() {
     const nm = e.customer_name || '(tanpa nama)';
     const kb = cpBareName(e.kabupaten || '') || '—';
     const dt = new Date(e.ts).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
-    return `<option value="${e.id}">${sudahAdaLink.has(e.id) ? '✓ ' : ''}${h(nm)} · ${h(kb)} · ${h(dt)}</option>`;
+    return `<option value="${e.id}">${sudahAdaLink.has(e.id) ? '✓ ' : ''}${waIsDead(e.customer_phone) ? '⛔ ' : ''}${h(nm)} · ${h(kb)} · ${h(dt)}</option>`;
   }).join('');
 
   costModal(`
@@ -8996,7 +9235,7 @@ function rrOpenCreate() {
       ${opts}
     </select>
     <div style="font-size:10.5px;color:#94a3b8;margin-top:5px;line-height:1.5;">
-      ${closings.length ? 'Tanda ✓ = pelanggan itu sudah pernah dibuatkan link.' : 'Belum ada catatan berstatus Closing — isi manual dulu.'}
+      ${closings.length ? 'Tanda ✓ = sudah pernah dibuatkan link. Tanda ⛔ = nomor WA-nya sudah tidak bisa dihubungi.' : 'Belum ada catatan berstatus Closing — isi manual dulu.'}
     </div>
 
     <div style="height:12px;"></div>
