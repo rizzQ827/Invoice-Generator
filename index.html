@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Invoice Generator · v1.0.79</title>
-<!-- v1.0.79 -->
+<title>Invoice Generator · v1.0.80</title>
+<!-- v1.0.80 -->
 <meta name="description" content="Aplikasi pembuat invoice bata ringan & panel lantai multi-brand">
 <meta name="theme-color" content="#0e9e4a">
 <meta name="mobile-web-app-capable" content="yes">
@@ -2055,6 +2055,19 @@
   .tm-badge.filtered { background: #fef3c7; color: #92400e; }
   .tm-act.pin { color: #1C1C1E; border-color: #F5C200; background: #FFF8DB; }
 
+  /* ═══════ v1.0.80: KOTA PEMBELI (dari invoice BRICON) ═══════ */
+  .kt-row { display: flex; align-items: center; gap: 10px; background: #fff; border: 1px solid #e2e8f0; border-radius: 11px; padding: 9px 11px; margin-bottom: 6px; cursor: pointer; }
+  .kt-row.off { opacity: .55; }
+  .kt-row input { width: 17px; height: 17px; accent-color: var(--brand-color); flex-shrink: 0; }
+  .kt-row .n { flex: 1; min-width: 0; font-size: 12.5px; font-weight: 800; color: #0f172a; }
+  .kt-row .s { font-size: 10.5px; color: #94a3b8; font-weight: 500; margin-top: 2px; }
+  .kt-inv { background: #fff; border: 1px solid #e2e8f0; border-radius: 11px; padding: 9px 11px; margin-bottom: 6px; }
+  .kt-inv.unk { border-color: #fde68a; background: #fffbeb; }
+  .kt-inv .t { font-size: 12px; font-weight: 800; color: #0f172a; }
+  .kt-inv .a { font-size: 10.5px; color: #64748b; margin: 2px 0 7px; line-height: 1.45; word-break: break-word; }
+  .kt-inv select { height: 34px; font-size: 12px; padding: 0 8px; width: 100%; }
+  .kt-details summary { font-size: 11.5px; font-weight: 700; color: #475569; cursor: pointer; padding: 6px 0; }
+
   /* ── Tugas E: kalkulator ukuran ────────────────────────────── */
   .brw-calc-note {
     font-size: 10.5px; color: var(--brw-muted2); line-height: 1.55; margin-top: 10px;
@@ -2131,7 +2144,7 @@
     </div>
     <div class="min-w-0">
       <div class="text-[14px] font-bold text-slate-900 truncate leading-tight">Invoice Generator</div>
-      <div class="text-[10px] text-slate-400 truncate leading-tight" id="appVersionLabel">v1.0.79</div>
+      <div class="text-[10px] text-slate-400 truncate leading-tight" id="appVersionLabel">v1.0.80</div>
     </div>
   </div>
 
@@ -2638,6 +2651,9 @@
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Tambah Ulasan Manual
           </button>
+
+          <div class="tm-subhead">Kota pembeli di website (dari invoice)</div>
+          <div id="ktList"></div>
         </div>
       </div>
 
@@ -3254,7 +3270,7 @@ const USER_PP_MAP = {
 // ════════════════════════════════════════════════════════════════
 //  CONSTANTS
 // ════════════════════════════════════════════════════════════════
-const APP_VERSION = '1.0.79';
+const APP_VERSION = '1.0.80';
 
 // v1.0.77: SATU-SATUNYA tempat domain website. Domain lama sudah disuspend
 // (11 Nov 2026) dan tidak boleh muncul lagi; kalau ganti domain lagi,
@@ -9064,6 +9080,118 @@ async function rrLoadAll() {
   tmRenderRules();
   rrRenderList();
   tmRenderList();
+  ktLoad();               // v1.0.80: kota pembeli dari invoice
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  v1.0.80 — KOTA PEMBELI DI WEBSITE (dari invoice BRICON)
+//   Database (fungsi kota_terkirim_admin) membaca SEMUA invoice merek BRICON
+//   dari akun mana pun, lalu menebak kabupatennya dari alamat.
+//   Di sini Reyhan bisa: (1) mencentang kabupaten mana yang tampil di website,
+//   (2) membetulkan kabupaten invoice yang alamatnya tidak terbaca,
+//   (3) mengabaikan invoice dobel/batal. Website hanya menerima NAMA kabupaten.
+// ═══════════════════════════════════════════════════════════════
+const KT_KAB = ['Surabaya','Sidoarjo','Gresik','Mojokerto','Jombang','Pasuruan','Malang','Batu',
+  'Probolinggo','Lumajang','Jember','Bondowoso','Situbondo','Banyuwangi','Kediri','Blitar','Tulungagung',
+  'Trenggalek','Nganjuk','Madiun','Magetan','Ngawi','Ponorogo','Pacitan','Bojonegoro','Tuban','Lamongan',
+  'Bangkalan','Sampang','Pamekasan','Sumenep'];
+let ktInv = [], ktAtur = [], ktReady = false;
+
+async function ktLoad() {
+  if (!cpEnabled()) return;
+  try {
+    const [{ data: inv, error: e1 }, { data: at, error: e2 }] = await Promise.all([
+      _sb.rpc('kota_terkirim_admin'),
+      _sb.from('kota_terkirim_atur').select('*').eq('user_id', CP_OWNER),
+    ]);
+    if (e1 || e2) { console.warn('ktLoad:', e1 || e2); ktReady = false; }
+    else { ktInv = inv || []; ktAtur = at || []; ktReady = true; }
+  } catch (e) { console.warn('ktLoad:', e); ktReady = false; }
+  ktRender();
+}
+
+function ktTampil(kab) {
+  const r = ktAtur.find(a => a.kabupaten === kab);
+  return r ? !!r.tampil : true;   // kabupaten baru otomatis tampil
+}
+
+function ktRender() {
+  const box = document.getElementById('ktList');
+  if (!box) return;
+  if (!ktReady) {
+    box.innerHTML = `<div class="plog-empty">Fitur kota pembeli belum aktif — database belum diperbarui (file <b>kota-terkirim.sql</b>).</div>`;
+    return;
+  }
+  if (!ktInv.length) {
+    box.innerHTML = `<div class="plog-empty">Belum ada invoice merek BRICON.</div>`;
+    return;
+  }
+  // Ringkas per kabupaten
+  const per = {};
+  ktInv.forEach(i => {
+    if (!i.kabupaten) return;
+    const k = per[i.kabupaten] || (per[i.kabupaten] = { cust: new Set(), prod: new Set() });
+    k.cust.add((i.customer || '').toLowerCase().trim() || ('#' + i.invoice_id));
+    k.prod.add(i.produk === 'panel' ? 'Panel' : 'Bata');
+  });
+  const kabs = Object.keys(per).sort((a, b) => per[b].cust.size - per[a].cust.size || a.localeCompare(b));
+  const nOn = kabs.filter(ktTampil).length;
+  const unk = ktInv.filter(i => !i.kabupaten && !i.abaikan);
+
+  const rows = kabs.map(k => {
+    const on = ktTampil(k);
+    return `<label class="kt-row${on ? '' : ' off'}">
+      <input type="checkbox" ${on ? 'checked' : ''} onchange="ktSetTampil('${h(k)}', this.checked)">
+      <span class="n">${h(k)}<div class="s">${per[k].cust.size} pembeli · ${[...per[k].prod].join(' & ')}</div></span>
+      <span class="rr-tag ${on ? 'done' : 'exp'}">${on ? 'Tampil' : 'Disembunyikan'}</span>
+    </label>`;
+  }).join('');
+
+  const opts = cur => `<option value="">— Belum diisi —</option>` +
+    KT_KAB.map(k => `<option value="${k}"${cur === k ? ' selected' : ''}>${k}</option>`).join('') +
+    `<option value="__abaikan"${cur === '__abaikan' ? ' selected' : ''}>Abaikan (dobel / batal / bukan kiriman)</option>`;
+  const invCard = i => {
+    const cur = i.abaikan ? '__abaikan' : (i.kabupaten_manual || i.tebakan || '');
+    const ket = i.abaikan ? 'Diabaikan' : (i.kabupaten_manual ? 'Diisi manual' : (i.tebakan ? 'Terbaca otomatis dari alamat' : 'Alamat tidak terbaca'));
+    return `<div class="kt-inv${!i.kabupaten && !i.abaikan ? ' unk' : ''}">
+      <div class="t">${h(i.customer || 'Tanpa nama')} · ${h(i.doc_no || '')}</div>
+      <div class="a">${h(i.doc_date || '')} · ${i.produk === 'panel' ? 'Panel' : 'Bata'} · ${h(i.alamat || 'alamat kosong')}<br><i>${ket}</i></div>
+      <select class="input" onchange="ktSetInvoice(${Number(i.invoice_id)}, this.value)">${opts(cur)}</select>
+    </div>`;
+  };
+
+  box.innerHTML = `<div class="tm-rules" style="margin-top:0">
+      <div class="tm-rules-head"><span class="t">Strip "Sudah dikirim ke" di website</span><span class="live">${nOn} kabupaten tampil</span></div>
+      <div class="tm-rules-note">Diambil otomatis dari semua invoice merek BRICON. Hilangkan centang untuk menyembunyikan kabupaten dari website. Yang tampil hanya nama kabupatennya — nama &amp; nomor pembeli tidak pernah keluar.</div>
+    </div>
+    <div style="margin-top:8px">${rows || '<div class="plog-empty">Belum ada kabupaten yang terbaca.</div>'}</div>
+    ${unk.length ? `<div class="tm-subhead" style="color:#b45309">${unk.length} invoice belum ketahuan kabupatennya</div>${unk.map(invCard).join('')}` : ''}
+    <details class="kt-details"><summary>Lihat &amp; betulkan semua invoice BRICON (${ktInv.length})</summary>
+      ${ktInv.filter(i => i.kabupaten || i.abaikan).map(invCard).join('')}
+    </details>`;
+}
+
+async function ktSetTampil(kab, on) {
+  try {
+    const { error } = await _sb.from('kota_terkirim_atur')
+      .upsert({ user_id: CP_OWNER, kabupaten: kab, tampil: !!on, updated_at: new Date().toISOString() }, { onConflict: 'user_id,kabupaten' });
+    if (error) { console.error(error); toast('Gagal menyimpan', 'error'); return; }
+    const r = ktAtur.find(a => a.kabupaten === kab);
+    if (r) r.tampil = !!on; else ktAtur.push({ user_id: CP_OWNER, kabupaten: kab, tampil: !!on });
+    ktRender();
+    toast(on ? `✓ ${kab} tampil di website` : `✓ ${kab} disembunyikan dari website`);
+  } catch (e) { console.error(e); toast('Gagal menyimpan', 'error'); }
+}
+
+async function ktSetInvoice(id, val) {
+  const row = { invoice_id: id, user_id: CP_OWNER, updated_at: new Date().toISOString(),
+    abaikan: val === '__abaikan', kabupaten: (val && val !== '__abaikan') ? val : null };
+  try {
+    const { error } = await _sb.from('kota_terkirim_invoice').upsert(row, { onConflict: 'invoice_id' });
+    if (error) { console.error(error); toast('Gagal menyimpan', 'error'); return; }
+    toast('✓ Tersimpan');
+    ktLoad();
+  } catch (e) { console.error(e); toast('Gagal menyimpan', 'error'); }
 }
 
 function rrUrl(r) { return `https://${WEBSITE_DOMAIN}/ulasan?t=${encodeURIComponent(r.token)}`; }
